@@ -1,6 +1,7 @@
 package com.myshopkirana.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -114,12 +115,7 @@ public class HomeActivity extends AppCompatActivity implements TabLayout.OnTabSe
 
         mBinding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        //Initializing viewPager
 
-        adapter = new Pager(getSupportFragmentManager(), mBinding.tabLayout.getTabCount(), HomeActivity.this);
-        mBinding.pager.setOffscreenPageLimit(1);
-        //Adding adapter to pager
-        mBinding.pager.setAdapter(adapter);
 
 
         //Adding onTabSelectedListener to swipe views
@@ -163,7 +159,14 @@ public class HomeActivity extends AppCompatActivity implements TabLayout.OnTabSe
                     mBinding.llTabView.setVisibility(View.GONE);
                 } else {
                     mBinding.llTabView.setVisibility(View.VISIBLE);
-                    calCustomerList(clusterId);
+                    //Initializing viewPager
+
+                    adapter = new Pager(getSupportFragmentManager(), mBinding.tabLayout.getTabCount(),
+                            HomeActivity.this,clusterList.get(pos).getClusterLatLngList());
+                    mBinding.pager.setOffscreenPageLimit(1);
+                    //Adding adapter to pager
+                    mBinding.pager.setAdapter(adapter);
+
 
                 }
             }
@@ -175,9 +178,7 @@ public class HomeActivity extends AppCompatActivity implements TabLayout.OnTabSe
         calcityApi();
     }
 
-    private void calCustomerList(int clusterId) {
-        commonClassForAPI.fetchCustomer(objCluster, new Array[clusterId]);
-    }
+
 
     private void callClusterApi(int cityId) {
         commonClassForAPI.fetchCluster(objCluster, cityId);

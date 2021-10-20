@@ -1,14 +1,18 @@
 package com.myshopkirana.model;
 
+import com.google.gson.annotations.SerializedName;
 import com.google.maps.model.LatLng;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
 public class ClusterModel implements Serializable {
+    @SerializedName("ClusterId")
     private int ClusterId;
+    @SerializedName("ClusterName")
     private String ClusterName;
-    private ArrayList<LatLng> clusterLatLngList;
+    @SerializedName("clusterlatlng")
+    private ArrayList<ClusterLatLngModel> clusterLatLngList;
 
     public int getClusterId() {
         return ClusterId;
@@ -26,11 +30,11 @@ public class ClusterModel implements Serializable {
         ClusterName = clusterName;
     }
 
-    public ArrayList<LatLng> getClusterLatLngList() {
+    public ArrayList<ClusterLatLngModel> getClusterLatLngList() {
         return clusterLatLngList;
     }
 
-    public void setClusterLatLngList(ArrayList<LatLng> clusterLatLngList) {
+    public void setClusterLatLngList(ArrayList<ClusterLatLngModel> clusterLatLngList) {
         this.clusterLatLngList = clusterLatLngList;
     }
 }

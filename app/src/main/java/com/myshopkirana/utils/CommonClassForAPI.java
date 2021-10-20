@@ -109,42 +109,42 @@ public class CommonClassForAPI {
                 });
     }
 
-    public void fetchCustomer(final DisposableObserver daysListDes, Array[] cityId) {
-        RestClient.getInstance(mActivity).getService().getCluster(cityId)
-                .subscribeOn(Schedulers.io())
-//                .doOnSubscribe(disposable -> Utils.showProgressDialog(mActivity))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ArrayList<ClusterModel>>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                    }
-
-                    @Override
-                    public void onNext(ArrayList<ClusterModel> o) {
-
-                        ClusterModel clusterModel=new ClusterModel();
-                        clusterModel.setClusterId(00);
-                        clusterModel.setClusterName("Select Cluster");
-                        clusterModel.setClusterLatLngList(new ArrayList<>());
-                        o.add(clusterModel);
-                        Collections.reverse(o);
-                        daysListDes.onNext(o);
-                    }
-
-
-                    @Override
-                    public void onError(Throwable e) {
-                        // customDialog.dismiss();
-                        daysListDes.onError(e);
-                    }
-
-                    @Override
-                    public void onComplete() {
-                        //customDialog.dismiss();
-                        daysListDes.onComplete();
-                    }
-                });
-    }
+//    public void fetchCustomer(final DisposableObserver daysListDes, Array[] cityId) {
+//        RestClient.getInstance(mActivity).getService().getCluster(cityId)
+//                .subscribeOn(Schedulers.io())
+////                .doOnSubscribe(disposable -> Utils.showProgressDialog(mActivity))
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Observer<ArrayList<ClusterModel>>() {
+//                    @Override
+//                    public void onSubscribe(Disposable d) {
+//                    }
+//
+//                    @Override
+//                    public void onNext(ArrayList<ClusterModel> o) {
+//
+//                        ClusterModel clusterModel=new ClusterModel();
+//                        clusterModel.setClusterId(00);
+//                        clusterModel.setClusterName("Select Cluster");
+//                        clusterModel.setClusterLatLngList(new ArrayList<>());
+//                        o.add(clusterModel);
+//                        Collections.reverse(o);
+//                        daysListDes.onNext(o);
+//                    }
+//
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                        // customDialog.dismiss();
+//                        daysListDes.onError(e);
+//                    }
+//
+//                    @Override
+//                    public void onComplete() {
+//                        //customDialog.dismiss();
+//                        daysListDes.onComplete();
+//                    }
+//                });
+//    }
 
 //
 //
