@@ -29,8 +29,8 @@ public interface APIServices {
 //    Observable<JsonObject> uploadImage(@Part MultipartBody.Part body);
 
 
-    //api/SalesApp/CustomerAddressUpdateRequest
-    @POST("/api/SalesApp/CustomerAddressUpdateRequest")
-    Observable<JsonObject> UpdateCustLocation(@Query("cityid") int cityid);
+//    //api/SalesApp/CustomerAddressUpdateRequest
+//    @POST("/api/SalesApp/CustomerAddressUpdateRequest")
+//    Observable<JsonObject> UpdateCustLocation(@Query("cityid") int cityid);
 
 }

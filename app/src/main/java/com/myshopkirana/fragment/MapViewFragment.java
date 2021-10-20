@@ -1,21 +1,34 @@
 package com.myshopkirana.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.maps.model.LatLng;
 import com.myshopkirana.R;
+import com.myshopkirana.activity.HomeActivity;
+import com.myshopkirana.model.ClusterLatLngModel;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link MapViewFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MapViewFragment extends Fragment {
+public class MapViewFragment extends Fragment implements OnMapReadyCallback {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -25,9 +38,23 @@ public class MapViewFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
-    public MapViewFragment() {
+    private HomeActivity activity;
+    ArrayList<ClusterLatLngModel> clusterList;
+    private GoogleMap googleMapMain;
+    public MapViewFragment(ArrayList<ClusterLatLngModel> clusterList) {
         // Required empty public constructor
+        Log.e("CLUSTERLISSSS",">> "+clusterList.size());
+        this.clusterList=clusterList;
+    }
+    public MapViewFragment( ) {
+        // Required empty public constructor
+
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        activity = (HomeActivity) context;
     }
 
     /**
@@ -56,11 +83,28 @@ public class MapViewFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_map_view, container, false);
+        View view=inflater.inflate(R.layout.fragment_map_view, container, false);
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+        return view;
+
+
+    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        googleMapMain = googleMap;
     }
 }
