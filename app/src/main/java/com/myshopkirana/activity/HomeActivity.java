@@ -107,10 +107,9 @@ public class HomeActivity extends AppCompatActivity implements TabLayout.OnTabSe
         commonClassForAPI = CommonClassForAPI.getInstance(this);
         cMainList = new ArrayList<>();
         clusterList = new ArrayList<>();
-
-
         //Adding the tabs using addTab() method
         mBinding.tabLayout.addTab(mBinding.tabLayout.newTab().setText("List View"));
+        mBinding.tabLayout.addTab(mBinding.tabLayout.newTab().setText("Map View"));
         mBinding.tabLayout.addTab(mBinding.tabLayout.newTab().setText("Map View"));
 
         mBinding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
@@ -160,10 +159,9 @@ public class HomeActivity extends AppCompatActivity implements TabLayout.OnTabSe
                 } else {
                     mBinding.llTabView.setVisibility(View.VISIBLE);
                     //Initializing viewPager
-
                     adapter = new Pager(getSupportFragmentManager(), mBinding.tabLayout.getTabCount(),
                             HomeActivity.this,clusterList.get(pos).getClusterLatLngList());
-                    mBinding.pager.setOffscreenPageLimit(1);
+                    mBinding.pager.setOffscreenPageLimit(2);
                     //Adding adapter to pager
                     mBinding.pager.setAdapter(adapter);
 

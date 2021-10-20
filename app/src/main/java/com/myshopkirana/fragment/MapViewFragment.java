@@ -38,6 +38,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
     private HomeActivity activity;
     ArrayList<ClusterLatLngModel> clusterList;
     private GoogleMap googleMapMain;
@@ -83,13 +84,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-    @Override
-    public void setUserVisibleHint(boolean visible) {
-        if (visible) {
-            //load content
-            initialization();
-        }
-    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -101,13 +96,19 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.fragment_map_view, container, false);
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+
 
         return view;
 
 
+    }
+    @Override
+    public void setUserVisibleHint(boolean visible) {
+        if (visible) {
+            SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+                    .findFragmentById(R.id.mapview);
+            mapFragment.getMapAsync(this);
+        }
     }
 
     @Override
