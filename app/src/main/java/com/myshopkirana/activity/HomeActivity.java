@@ -152,8 +152,6 @@ public class HomeActivity extends AppCompatActivity implements TabLayout.OnTabSe
         mBinding.spnCluster.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 int clusterId = clusterList.get(pos).getClusterId();
-
-
                 if (clusterId == 00) {
                     mBinding.llTabView.setVisibility(View.GONE);
                 } else {
@@ -176,6 +174,16 @@ public class HomeActivity extends AppCompatActivity implements TabLayout.OnTabSe
         calcityApi();
     }
 
+    private void calCustomerList(int clusterId) {
+
+        int clusterValue = 0;
+        Integer[] intArray = {clusterId};
+        for(Integer val: intArray){
+            clusterValue = val;
+            System.out.print(val + " ");
+        }
+        commonClassForAPI.fetchCustomer(objCluster, clusterValue);
+    }
 
 
     private void callClusterApi(int cityId) {

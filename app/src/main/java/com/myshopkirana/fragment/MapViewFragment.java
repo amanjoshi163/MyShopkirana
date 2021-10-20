@@ -84,7 +84,7 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
+ 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

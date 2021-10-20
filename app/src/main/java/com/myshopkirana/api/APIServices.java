@@ -1,5 +1,6 @@
 package com.myshopkirana.api;
 
+import com.google.gson.JsonObject;
 import com.myshopkirana.model.CityModel;
 import com.myshopkirana.model.ClusterModel;
 
