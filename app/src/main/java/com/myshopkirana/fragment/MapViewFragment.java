@@ -1,10 +1,15 @@
 package com.myshopkirana.fragment;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -13,13 +18,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.maps.model.LatLng;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.myshopkirana.R;
 import com.myshopkirana.activity.HomeActivity;
 import com.myshopkirana.model.ClusterLatLngModel;
+import com.myshopkirana.utils.TextUtils;
 
 import java.util.ArrayList;
 
@@ -42,12 +52,15 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
     private HomeActivity activity;
     ArrayList<ClusterLatLngModel> clusterList;
     private GoogleMap googleMapMain;
+    private Marker marker = null;
+
     public MapViewFragment(ArrayList<ClusterLatLngModel> clusterList) {
         // Required empty public constructor
-        Log.e("CLUSTERLISSSS",">> "+clusterList.size());
-        this.clusterList=clusterList;
+        Log.e("CLUSTERLISSSS", ">> " + clusterList.size());
+        this.clusterList = clusterList;
     }
-    public MapViewFragment( ) {
+
+    public MapViewFragment() {
         // Required empty public constructor
 
     }
@@ -84,35 +97,50 @@ public class MapViewFragment extends Fragment implements OnMapReadyCallback {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
- 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
 
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view=inflater.inflate(R.layout.fragment_map_view, container, false);
+        View view = inflater.inflate(R.layout.fragment_map_view, container, false);
 
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.mapview);
+        mapFragment.getMapAsync(this);
 
         return view;
 
 
     }
-    @Override
-    public void setUserVisibleHint(boolean visible) {
-        if (visible) {
-            SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
-                    .findFragmentById(R.id.mapview);
-            mapFragment.getMapAsync(this);
-        }
-    }
+
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         googleMapMain = googleMap;
+        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        googleMap.setMyLocationEnabled(true);
+        LatLng latLng=new LatLng(googleMap.getMyLocation().getLatitude(),googleMap.getMyLocation().getLongitude());
+
+        googleMap.addMarker(new MarkerOptions()
+                .position(latLng)
+                .title("First Pit Stop")
+                .icon(BitmapDescriptorFactory
+                        .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
+
+        googleMapMain.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12.0f));
+
     }
+
+
 }

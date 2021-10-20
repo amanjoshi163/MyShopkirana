@@ -3,12 +3,20 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/SK/Documents/MyShopkirana/app/src/main/res/layout/activity_home.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/SK/Documents/MyShopkirana/app/src/main/res/layout/fragment_list_view.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/user/Aman_project/MyShopkirqana/app/src/main/res/drawable-v24/border_orange_report.xml" value="0.14629629629629629" />
-        <entry key="..\:/Users/user/Aman_project/MyShopkirqana/app/src/main/res/layout/activity_home.xml" value="0.1" />
+        <entry key="..\:/Users/user/Aman_project/MyShopkirqana/app/src/main/res/drawable/dashboard_dark_main.xml" value="0.2203125" />
+        <entry key="..\:/Users/user/Aman_project/MyShopkirqana/app/src/main/res/drawable/stock_hkb.xml" value="0.17962962962962964" />
+        <entry key="..\:/Users/user/Aman_project/MyShopkirqana/app/src/main/res/layout/activity_customer_detail.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/user/Aman_project/MyShopkirqana/app/src/main/res/layout/activity_home.xml" value="0.15" />
         <entry key="..\:/Users/user/Aman_project/MyShopkirqana/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/user/Aman_project/MyShopkirqana/app/src/main/res/layout/activity_map_view.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/user/Aman_project/MyShopkirqana/app/src/main/res/layout/complete_bottom_sheet.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/user/Aman_project/MyShopkirqana/app/src/main/res/layout/fragment_list_view.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/user/Aman_project/MyShopkirqana/app/src/main/res/layout/fragment_map_view.xml" value="0.19010416666666666" />
         <entry key="..\:/Users/user/Aman_project/MyShopkirqana/app/src/main/res/layout/listitems_layout.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/user/Aman_project/MyShopkirqana/app/src/main/res/layout/progress_dialog.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/user/Aman_project/MyShopkirqana/app/src/main/res/layout/sk_listview_item.xml" value="0.4621676891615542" />
+        <entry key="..\:/Users/user/Aman_project/MyShopkirqana/app/src/main/res/layout/toolbar_arrow.xml" value="0.20416666666666666" />
       </map>
     </option>
   </component>

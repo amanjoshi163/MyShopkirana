@@ -1,7 +1,589 @@
-
 <resources>
+    <string name="default_notification_channel_id" translatable="false">Sales</string>
+    <string name="title_home">Home</string>
+    <string name="checkout">Checkout</string>
+    <string name="internet_connection">Please Connect to Internet</string>
+    <string name="enter_valid_password">Please enter a valid Password</string>
+    <string name="enter_password">Please Enter password</string>
+    <string name="enter_mobile_number">Please Enter Mobile Number</string>
+    <string name="google_directions_key">AIzaSyAsGm-NzYcUOJa5MutpjNlDtFAuh3r8lUs</string>
 
+    // Screen strings
+    <string name="enter_proper_mobile_number">Enter Valid Mobile Number</string>
+    <string name="skip">Skip</string>
+    <string name="valid_GST_Number">Please Valid Enter GST Number</string>
+    // Screen strings
+    <string name="select_rating">Please select rating</string>
+    <!-- Navigation Drawer menu labels -->
+    // Screen strings
+    <string name="EnterMobileNumber">Verify Your Number</string>
+    <string name="verify">Verify</string>
+    <string name="txt_verife">Verified</string>
+    <string name="EnterOTP">Enter OTP</string>
+    <string name="resendotp">RESEND OTP</string>
+    <string name="login_otp">Login with OTP</string>
+    <string name="english">English</string>
+    <string name="hindi">हिंदी</string>
+    // Screen strings
+    <string name="feedback_empty_field">Please enter feedback text</string>
+    <!-- Toolbar titles when navigation menu item is selected -->
+    // Screen strings
+    <string name="total_amount">Total Amount :\u0020</string>
+    <string name="total_target">Total \n Target</string>
+    <string name="achive_target">Target \n Achieve</string>
+    <string name="total_item">Total Item :\u0020</string>
+    <string name="no_target">No Target Found</string>
+    <string name="remain_target">Target \n Remain</string>
+    // Screen strings
+    <string name="Tiltle_feedback">Feedback</string>
+    <string name="Tiltle_Categories">Categories</string>
+    <string name="Tiltle_Offers">Offers</string>
+    <!--myorderActivity-->
+    <string name="StartShopping">Start Shopping</string>
+    <string name="StartS_day">Start Your Day</string>
+    <string name="NoShopping">You have not Placed any Orders Yet</string>
+    <string name="Title_Order">My Order</string>
+    <!-- expandablelistview-->
+    <string name="myAccount">My Account</string>
+    <string name="myOrder">My Order</string>
+    <string name="mydream">My Dream</string>
+    <string name="my_action">My Action</string>
+    <string name="txt_brand_target">Brand Target</string>
+    <string name="my_target">My Target</string>
+    <string name="my_cutomer">My Customer</string>
+    <string name="requestbrand">Request Brand </string>
+    <string name="contact">Contact Us</string>
+    <!-- mywallet-->
+    <string name="walletsummary">Wallet Summary</string>
+    <string name="rewardsummry">Reward Summary</string>
+    <string name="currentbalance">Current Wallet Points</string>
+    <string name="usedpoint">Used Point</string>
+    <string name="earningpoint">Earning Point</string>
+    <!-- mrdream-->
+    <string name="totalpoint">Total Point</string>
+    <string name="buy">Buy</string>
+    // Screen strings
+    <string name="total_dreamPoint">Dream Point :\u0020</string>
+    <string name="total_dp">DP :\u0020</string>
+    <string name="moqs">MOQ :\u0020</string>
+    <string name="item_mrp"></string>
+    <string name="comm_amount">Lead Commissions</string>
+    <string name="my_comm">My Commission</string>
+    <string name="delivery_charges">Delivery Charge : \u0020</string>
+    <string name="review_basket">Review Basket</string>
+    <string name="item_moq">MOQ : </string>
+    <string name="payment_option">Payment Option</string>
+    <string name="Rs">\u20B9</string>
+    <!-- xml-->
+    <string name="twenty_percent_off"></string>
+    <string name="moq_size"></string>
+    <string name="moq_mrp">MRP</string>
+    <string name="item_price">Price</string>
+    <string name="moq_margin">Margin</string>
+    <string name="dream_point">Dream Point</string>
+    <string name="item_quantity">0</string>
+    <string name="item_images">Item Images</string>
+    <!--requestbrand-->
+    <string name="title_requestbrand"> Please enter the Brand Name </string>
+    <string name="enetrbrandname"> Brand Name</string>
+    <string name="submit_requestbrand">Submit</string>
+    <!--feedback-->
+    <string name="title_feedback">Overall, how satisfied are you with the service? </string>
+    <string name="hint">Feedback</string>
+    <!--contactus-->
+    <string name="email">Email</string>
+    <string name="website">Website</string>
+    <!-- search-->
+    <string name="txt_search">Search</string>
+    <string name="txt_search_sk">Search by Sk code...</string>
+    <string name="txt_search_city">Search by city...</string>
+    <string name="hint_search">Search Item</string>
+    <string name="itemavailable">No Items Available</string>
+    <!-- Notification-->
+    <string name="title_notification">Notification</string>
+    <!-- login-->
+    <string name="hint_passwordr">Password</string>
+    <string name="login">Login </string>
+    <!-- signup-->
+    <string name="ok">OK</string>
+    <!-- profile-->
+    <string name="changelang">Change Language</string>
+    <string name="Congratulation">Congratulation...</string>
+    <string name="add_more_items">+ Add more items?</string>
+    <string name="load_more">Load More...</string>
+    <string name="msg_add_more_to_home">Add From Home</string>
+    <string name="msg_add_more_qty">Add More Qty</string>
+    <string name="msg_yourorder"> Your Order</string>
+    <string name="title_order_review">Order Review</string>
+    <string name="use_dial">Play Dial</string>
+    <string name="title">Title</string>
+    // Screen strings
+    <string name="contact_us">Contact Us</string>
+    <string name="change_hub">Change Hub</string>
+    <string name="log_out">Log Out</string>
+    <string name="express">EXPRESS</string>
+    <string name="no_items_avl">No items Available</string>
+    <string name="no_cust_avl">No Customer Available</string>
+    <!--orderdetails-->
+    <string name="orderno">Order No:</string>
+    <string name="Name">Name</string>
+    <string name="billing">Billing Address:</string>
+    <string name="itequantity">Quantity</string>
+    <string name="report">Report</string>
+    <!-- customer sign up-->
+    <string name="customer_register">Register</string>
+    <string name="customer_sign_up">Customer Sign Up</string>
+    <string name="validation_for_upload_image">Please upload license image</string>
+    <string name="summary">Order Summary</string>
+    <string name="status">Status</string>
+    <string name="cheque_no">Cheque No.</string>
+    <string name="totalorder">Total Order</string>
+    <string name="amount">Amount</string>
+    <string name="delivered">Delivered</string>
+    <string name="in_pregress">In Progress</string>
+    <string name="canceled">Cancelled</string>
+    <string name="pending">Pending</string>
+    <string name="cutomer">Customers</string>
+    <string name="compnay">Company</string>
+    // Screen strings
+    <string name="validation_for_number">Number is not valid</string>
+    <string name="validation_for_number_empty">Enter Mobile No.</string>
+    <string name="validation_for_FSAAI">Enter FSAAI/Ref/No/GumastaNo.</string>
+    <string name="insufficient_wallet_point">Insufficient wallet amount</string>
+    <string name="validation_for_addhar">Enter Valid Adhaar No.</string>
+    <string name="validation_for_pan">Enter Valid PAN No.</string>
+    <string name="validation_for_password">Enter password</string>
+    <string name="validation_for_shop_name">Enter Shop name</string>
+    <string name="toast_selectitem">Please select item</string>
+    <!--beat page-->
+    <string name="no_location">not find location</string>
+    <string name="top_brand">Top Brand</string>
+    <string name="sk_code">SK Code</string>
+    <string name="verify_gst_msg">GST Verify Successfully</string>
+
+    <string name="Freebies">Freebies</string>
+    <string name="no_item_in_cart">You did not add any Item in Cart</string>
+    <!--My Action-->
+    <string name="my_action_list">My Action List</string>
+    <string name="txt_low_to_high">Low To High</string>
+    <string name="txt_high_to_low">High To Low</string>
+    <string name="txt_dp">Dream Point</string>
+    <string name="txt_price">Price</string>
+    <string name="txt_filter_by">Filter By  </string>
+    <string name="txt_Your_Order">Your Order</string>
+    <string name="txt_Place_Order">Place Order</string>
+    <string name="txt_check_out">Are you sure, want to checkout</string>
+    <string name="txt_visit_desp">Are you visited this customer ?</string>
+
+    <string name="txt_cart_clear">Are you sure, want to clear the cart</string>
+    <string name="txt_Continue">Continue</string>
+    <string name="txt_Cancel">Cancel</string>
+    <string name="txt_low_amount_1">Oh! Since your order amount is below </string>
+
+    <string name="txt_low_amount_2"> , Please add a bit more to your cart</string>
+    <string name="txt_low_amount_5"> , Please add a bit more to your cart</string>
+    <string name="txt_low_amount_3">Oh! </string>
+    <string name="txt_low_amount_4"> Store minimum order amount is  </string>
+    <string name="txt_add_more_item">Yes! Add More Items</string>
+    <string name="txt_Sk_Code">Sk Code</string>
+    <string name="txt_Sk_Code_slas">Sk Code:</string>
+    // Screen strings
+    <string name="txt_Sk_from_list">Would you like to chose a Sk Code from the list?</string>
+    <string name="txt_yes">Yes</string>
+    <string name="txt_no">No</string>
+    <string name="txt_enter_sk_code">Please enter Sk Code.</string>
+    <string name="somthing_went_wrong">Something went wrong.</string>
+    // Screen strings
+    <!-- close popup Application-->
+    <string name="btn_yes">Yes</string>
+    <string name="btn_no">No</string>
+    <string name="txt_View_Detail">View Detail</string>
+    <string name="ordered">Order</string>
+    <string name="Dispatched">Dispatched</string>
+    <string name="Delivered">Delivered</string>
+    <string name="redeem">Redeem</string>
+    <string name="txt_Apply_coupon_code">Apply coupon code</string>
+    <string name="payment">Payment</string>
+    <!-- Request brand-->
+    <string name="request_brand">Request Brand</string>
+    <string name="txt_free_dail_msg">Spin And Win Free Dream Point</string>
+    <string name="txt_free_msg">You got</string>
+    <string name="txt_free_dail"> Free dial</string>
+    <string name="txt_free_point"> Free Point</string>
+    // Screen strings
+    <string name="txt_My_Order">My Order</string>
+    <string name="txt_My_Wallet">My Wallet</string>
+    <string name="txt_Bounce_cheque">Bounced Cheque</string>
+    <string name="txt_My_Dream">My Dream</string>
+    <string name="txt_My_Favourite">My Favourite</string>
+    <string name="txt_My_Beat">My Beat</string>
+    <string name="txt_Beats">Beats</string>
+    <string name="txt_mob">Mob:</string>
+    <string name="txt_cust_type">Type:</string>
+    <string name="txt_My_lead">My Leads</string>
+    <string name="txt_open">Open</string>
+    <string name="txt_lead">Leads</string>
+    <string name="txt_target">Customer Target</string>
+
+    <string name="txt_cheque">Bounce Cheque</string>
+    <string name="txt_cheque_limit">Cheque Limit</string>
+
+    <string name="txt_My_Dial">My Dial</string>
+    <string name="txt_product_deatils">Product Detail</string>
+    // Screen strings
+    <string name="txt_Order_ID">Order ID</string>
+    <string name="only_add_max_item">Only add maximum item</string>
+    <string name="minimum_qty_should_not_be_zero">Minimum Qty should not be zero</string>
+    <string name="txt_Shipping_Address">Shipping Address : </string>
+    <string name="txt_Would_you_like">Would you like to chose a Sk Code from the list?</string>
+    // Screen strings
+    <string name="txt_All_Customer">All Customer</string>
+    <string name="txt_my_sales">My Sales</string>
+    <string name="alert">Alert!!</string>
+    <string name="txt_my_action">My Action</string>
+    <string name="txt_Customer_name">Customer Name</string>
+    <string name="txt_point">Point</string>
+    <string name="txt_Last_days">Last 1 month</string>
+    <string name="txt_Last_months">Last 3 months</string>
+    // Screen strings
+    <string name="txt_Owner_Name">Owner Name</string>
+    <string name="txt_Shop_Name">Shop Name</string>
+    <string name="txt_bank_Name">Bank Name</string>
+    <string name="txt_distance">Distance</string>
+    <string name="txt_City">City</string>
+    <string name="txt_Billing_Address">Billing Address</string>
+    <string name="gst_pop_title">Verify GSTIN!</string>
+
+    <string name="validation_for_ship_address">Enter Shipping address</string>
+    <string name="validation_for_bill_address">Enter Billing address</string>
+
+    <string name="txt_Shop_Address">Shop Address</string>
+    <string name="txt_Moblie_No">Moblie No.</string>
+    <string name="grab_date">Grabbed Date</string>
+    <string name="cheq_date">Cheque Date</string>
+    <string name="dial_remaining">dial remaining</string>
+    <string name="verify_gst_msg_not">GST Not Verify</string>
+    <string name="chnge_gst">Remove GST</string>
+    <string name="txt_Zip">ZipCode</string>
+    <string name="txt_Alternative_Moblie_No">WhatsApp No.</string>
+    <string name="txt_Monthly_TurnOver">Monthly TurnOver</string>
+    <string name="txt_Shop_Size">Shop Size</string>
+    <string name="txt_Short_By">Sort By</string>
+    <string name="txt_shipping_address">Shipping Address</string>
+    <string name="txt_check_whatsapp">Check if Contact Number and Whatsapp Number is same.</string>
+    <string name="txt_Landmark">Landmark</string>
+    <string name="txt_chak_shiping">Check if shipping address and billing address is same.</string>
+    <string name="youAreNotUpdatedTitle">Update Available</string>
+    <string name="youAreNotUpdatedMessage">A new version of ShopKirana application is available. Please update to version\s</string>
+    <string name="youAreNotUpdatedMessage1">\s now</string>
+    <string name="update">Update</string>
+    <string name="improper_response_server">improper response from the server</string>
+    // Screen strings
+    <string name="txt_Upload_Documents">Upload Documents</string>
+    <string name="txt_jst_no">TIN_NO/GSTIN No:</string>
+    <string name="txt_gumsta">License and Gumasta Number</string>
+    <string name="txt_adhar">Adhaar Number</string>
+    <string name="txt_License">License</string>
+    <string name="txt_shop_image">Shop Image</string>
+    <string name="txt_beat_order">Beat Order</string>
+    <string name="txt_Detail">Detail</string>
+    <string name="txt_Active_Retailer">Active Retailer</string>
+    <string name="txt_View_Report">View Report</string>
+    <string name="txt_Status">Status:</string>
+    <string name="txt_total">Total</string>
+    <string name="txt_total_amount">Total amount</string>
+    <string name="txt_total_order">Total Order</string>
+    <string name="txt_total_customer">Total Customer</string>
+    // Screen strings
+    <string name="txt_path">Path</string>
+    <string name="txt_Nearby_outlets">Nearby 10 outlets</string>
+    <string name="txt_Top_Purchase_Brand">Top Purchase Brand</string>
+    <string name="txt_Visited">Visited</string>
+    <string name="txt_Not_Visited">Not Visited</string>
+    <string name="txt_Comments">Comments</string>
+    <string name="proceed">Proceed</string>
+    <string name="cancel">Cancel</string>
+    // Screen strings
+    <string name="txt_Customer_Name">Customer Name = </string>
+    <string name="txt_Customer_Number">Customer Number = </string>
+    <string name="txt_Customer_sk_code">Customer Sk code = </string>
+    <string name="txt_Customer_address">Customer Address = </string>
+    <string name="txt_Customer_Wallet_point">Customer Wallet point = </string>
+    <string name="txt_Take_Photo">Take Photo</string>
+    <string name="txt_Choose_from_Library">Choose from Library</string>
+    <string name="txt_Add_Photo">Add Photo!</string>
+    <string name="txt_profile">Profile</string>
+    // Screen strings
+    <string name="txt_First_Name">First Name</string>
+    <string name="txt_Last_name">Last Name</string>
+    <string name="txt_date_of_birth">Date of birth</string>
+    <string name="txt_Date_Of_Anniversary">Date Of Anniversary</string>
+    <string name="txt_Offers_is_Upcoming">Offers is Upcoming</string>
+    <string name="txt_Spin">SPIN</string>
+    // Screen strings
+    <string name="txt_Enter_Resend_Otp">Resend Otp:</string>
+    <string name="txt_sort">Sort</string>
+    <string name="txt_Scan_items_By_Barcode">Scan items By Barcode</string>
+    // Screen strings
+    <string name="msg_select_correct_date">Please select correct date</string>
+    <string name="msg_no_item_avilable">No item available</string>
+    <string name="msg_Request_Placed_Successfully">Request Placed Successfully</string>
+    <string name="msg_not_available">Data Not available</string>
+    <string name="msg_not_edit">Edit</string>
+    <string name="reason">Reason</string>
+    <string name="close_application_title">Closing Application</string>
+    <string name="cart_item_clear">Alert!</string>
+    // Screen strings
+    // Screen strings
+    <string name="txt_pan_number">PAN Number</string>
+    // Screen strings
+    // Screen strings
+    // Screen strings
+    <!--Dial wheel activity-->
+    <string name="without_earning_point_title_">Exit here</string>
+    <string name="spin_skip_title">Do you want to skip the Spin?</string>
+    <string name="change_number">Change Number</string>
+    <string name="verify_your_number">Verify Your Number</string>
+    <string name="msg_send_you_otp">We will send you an one Time password</string>
+    <string name="additemToast">You can not add item more than </string>
+    <string name="additemToast_2"> </string>
+    <string name="Price_Details">Price Details</string>
+    <string name="Delivery_Charges">Delivery Charges</string>
+    <string name="Amount_Payble">Amount Payble:</string>
+    <string name="terms_and_conditions_apply">Terms and conditions apply</string>
+    <string name="discount_applied">Discount Applied</string>
+    <string name="my_issues">My Issues</string>
+    <string name="add_ticket">Add Ticket</string>
+
+    <string name="you_are_not_elegible_for_this_offer">You are not eligible for this Offer!</string>
+    <string name="congratulations">Congratulations</string>
+    <string name="order_summary">Order Summary</string>
+    <string name="coupon_discount">Coupon Discount</string>
+    <string name="wallet_dis">Wallet Discount</string>
+    <string name="title_bill_discount">Bill Discount</string>
+    <string name="pay_now">Pay now</string>
+    <string name="txt_extra">Extra Stock</string>
+    <string name="please_select_multiple_pay_no_order_to_pay_at_once">Please select multiple Pay No order to pay at once.</string>
+
+    <string name="bill_limit_text">You Can not add more then\u0020</string>
+    <string name="post_bill_text">\u0020 credited after order delivered</string>
+    <string name="per_of_min_per">% OFF minimum purchase of ₹</string>
+    <string name="item_on_free">Item free of minimum purchase of ₹</string>
+    <string name="per_of_min_per_wallet">\u0020 OFF minimum purchase of ₹</string>
+    <string name="flat_rs">Flat ₹</string>
+    <string name="post_bill_text_o">(Credited after order delivered)</string>
+    <string name="txt_enter_cust_details">Please enter Sk Code/Mobile no/Customer Name.</string>
+    <string name="txt_inactive_cust">Freebies offer is not applicable for Inactive customer</string>
+    <string name="inactive_cust">Inactive Customer !!</string>
+    <string name="txt_scratch">ScratchCard</string>
+    <string name="achieved_total_calculated_on_delivered_value_only">*Achieved total calculated on delivered value only</string>
+    <string name="hurry_up">Hurry Up!!</string>
+    <string name="coming_soon">Coming Soon</string>
+    <string name="free">Free</string>
+    <string name="days_left">days left</string>
+    <string name="achieve_your">Achieve your</string>
+    <string name="remaining_qty">Remaining Qty:\u0020</string>
+    <string name="month_target">month target </string>
+    <string name="please_check_back_later">Please check back later</string>
+    <string name="completed_month_target">You have completed your Month target and won</string>
+    <string name="your_total">Your total</string>
+    <string name="on_completing_target">On completing your target worth</string>
+    <string name="get_giftcard">You get gift card worth</string>
+    <string name="reward_order_created">Reward order successfully created.</string>
+    <string name="reward_points_added_to_wallet">Reward points successfully added to your wallet.</string>
+    <string name="wallet_points_sec">Wallet points</string>
+    <string name="txt_continue_shopping">Continue Shopping</string>
+    <string name="order_done_msg">Order Placed Successfully.</string>
+    <string name="dash_beat_daily">My Beat- Daily</string>
+    <string name="dash_beat_target">Beat Target</string>
+
+    <string name="try_btn">Try Again</string>
+
+    <string name="we_are_preparing_to_serve_you_better">We are preparing to serve you better</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-</resources>
+    <string name="item_expire">Do you want to continue?</string>
+    <string name="tcs_heading">TCS charges</string>
+    <string name="topP_margin">Top Margin</string>
+    <string name="all_item">All Item</string>
+    <string name="item_remoce">Remove</string>
+    <!-- TODO: Remove or change this placeholder text -->
 
+    <!--    //dashboard-->
+
+    <string name="dash_my_dash">My Dashboard</string>
+    <string name="dash_area">Area</string>
+    <string name="dash_todays_visit">Today\'s visit</string>
+    <string name="dash_visit">Visited</string>
+    <string name="dash_conversion">Conversion</string>
+    <string name="dash_beat_order">Beat Order</string>
+    <string name="dash_av_line">Avg. line item</string>
+    <string name="dash_add_order">Add Order</string>
+    <string name="dash_beat_amount">Beat Amount</string>
+    <string name="dash_beat_start">Start Beat</string>
+
+    <string name="dash_sales_mat_daily">Sales Metrics- Daily</string>
+    <string name="dash_cust_count">Customer Count</string>
+    <string name="dash_total_amt">Total Amount</string>
+    <string name="dash_cust_aques_month">Customer Acquisition- Monthly</string>
+    <string name="dash_add_cust">Add Customer</string>
+
+    <!--    //weekly-->
+    <string name="dash_plan_visit">Planned Visits</string>
+    <string name="dash_sales_week">Sales Metrics - Weekly</string>
+
+    <!--    monthly-->
+    <string name="dash_sales_month">Sales Metrics - Monthly</string>
+    <string name="dash_prod_pareto">Product Pareto</string>
+    <string name="dash_cust_pareto">Customer Pareto</string>
+    <string name="dash_comp_matrics">Company Metrics</string>
+    <string name="pareto_prod">% product se 70 % Sale</string>
+    <string name="pareto_cust">% Customer se  70 % Sale</string>
+    <!-- TODO: Remove or change this placeholder text -->
+
+    <!--    today's visit screen-->
+
+    <string name="today_visit_wt_avb_amt">Wt. Avg Amount</string>
+    <string name="today_visit_wt_avb_order">Wt. Avg Orders</string>
+    <string name="today_visit_remain_time">Remaining Time</string>
+    <string name="today_visit_distance_left">Distance Left</string>
+    <string name="today_visit_compl_trip">Complete Trip</string>
+    <string name="today_visit_congr_msg">Congratulation You have Arrived</string>
+    <string name="today_visit_call">Call</string>
+    <string name="today_visit_tk_order">Take Order</string>
+    <string name="today_visit_note_msg">Note: Stand exactly at shop location and click on location button</string>
+    <string name="today_visit_new_location">Set New Location</string>
+
+    <!--top 20 item and brand screen-->
+    <string name="top_20_reschdule">Re-Schedule</string>
+    <string name="top_20_tab_1_head">Best Price Of Top Company</string>
+    <string name="top_20_tab_2_head">Top Customer Brands</string>
+    <string name="top_20_reshcdule_poptxt">Are you sure to re-schedule order for this customer?</string>
+    <string name="top_20_beat_not_ass">Beat Not Assign</string>
+    <string name="top_20_beat_avl_item">Avl Items</string>
+
+    <string name="wheel_msg_1">Get Free Wheel on min. order Amount of </string>
+    <string name="wheel_msg_2">with </string>
+    <string name="wheel_msg_3">Line item</string>
+    <string name="enter_wallet">Enter wallet point you want to use</string>
+    <string name="pay_cod">Cash on delivery</string>
+    <string name="tot_item">Total item</string>
+    <string name="del_chnrge">Delivery Charge</string>
+
+
+    <string name="ordered_amt">Ordered Amount</string>
+    <string name="travel_time">Travel Time</string>
+    <string name="order_status">Order Status</string>
+    <string name="sales_target">Sales Target</string>
+    <string name="week_target">Week Target</string>
+    <string name="month_target_list">Month Target</string>
+    <string name="line_item">Line items</string>
+    <string name="total_time">Total Time</string>
+    <string name="tot_dist">Total Distance</string>
+    <string name="amt_potential">Amount Potential</string>
+    <string name="order_potential">Orders Potential</string>
+    <string name="list_view">List View</string>
+    <string name="map_view">Map View</string>
+    <string name="cust_history">Customer Order History</string>
+    <string name="items">Items</string>
+
+
+    <string name="update_address">Update Address</string>
+    <string name="update_address_txt">Please Update Your Address.</string>
+    <string name="please_wait">Please wait...</string>
+    <string name="click_back">Click back again to exit</string>
+    <string name="app_vers">App version</string>
+    <string name="hub">Hub</string>
+    <string name="enter_item_name">Please Enter Item Name</string>
+    <string name="target_qty">Target Qty.</string>
+    <string name="achive_qty">Achieve Qty.</string>
+    <string name="perceatage">Percentage</string>
+    <string name="achieved">Achieved</string>
+    <string name="remaining">Remaining</string>
+    <string name="remove_item">Are you sure you want to remove item?</string>
+    <string name="per_req">Permission Required</string>
+    <string name="loc_req">Customer Location is Required.</string>
+    <string name="remove_gst_txt">Are you sure you want to Remove GST?</string>
+    <string name="image_upload_failed">Image upload failed</string>
+    <string name="please_try_again">Please try again later</string>
+    <string name="gps_popup">GPS is disabled in your device. Would you like to enable it?</string>
+    <string name="gps_go_setting">Goto Settings Page To Enable GPS</string>
+    <string name="need_kyc">You need to do KYC for this customer</string>
+
+    <string name="need_kyc_one">You need to do KYC after </string>
+    <string name="need_kyc_two">order</string>
+    <string name="already_vist">(Already Visited)</string>
+    <string name="from_txt">From</string>
+    <string name="to_txt">To</string>
+    <string name="to">To</string>
+
+    <string name="switch_txt">Switch</string>
+    <string name="get_otp">Get OTP</string>
+    <string name="didnot_get_otp">Didn\'t get the OTP Contact us  +(91) 7828112112</string>
+    <string name="enter_otp">Please Enter OTP</string>
+    <string name="enter_valid_otp">Please Enter Valid OTP</string>
+    <string name="my_earn">My Earning</string>
+    <string name="month_earn">Total Monthly Earning</string>
+    <string name="view">View More</string>
+    <string name="close">Close</string>
+    <string name="loca_per">Location Permission</string>
+    <string name="loca_per_msg">Beat Not Shown Without Location Permission.</string>
+    <string name="loca_not_msg">Location not found</string>
+    <string name="pl_on_location">Please ON Your Location</string>
+    <string name="visit_comple">Today visited completed successfully.</string>
+    <string name="no_beat_assing">No beat assign to you</string>
+    <string name="no_beat_title">No Beat</string>
+    <string name="select_beat_not_map">Selected beat not mapped with warehouse.</string>
+    <string name="refresh_dash">Please Refresh Your Dashboard.</string>
+    <string name="target_no_assign">Target Not Assign.</string>
+    <string name="txt_Customer_type">Customer Type = </string>
+    <string name="sel_month">Select Month and Year</string>
+
+    <string name="clear_all">Clear All</string>
+    <string name="select_reason">Select Reason</string>
+    <string name="shop_close">Shop Close</string>
+    <string name="other">Other</string>
+    <string name="txt_reason">Please Select Skip Reason</string>
+    <string name="txt_comment">Please Enter Comment</string>
+    <string name="txt_shop_close">Please Capture Shop Image</string>
+    <string name="txt_vist_target">Visit Target</string>
+    <string name="txt_re_book">Re-Book</string>
+    <string name="txt_get">Get</string>
+
+
+    //not use
+    <string name="txt_offer_1"> </string>
+    <string name="txt_offer_2"></string>
+    <string name="txt_offer_3">  </string>
+    <string name="txt_offer_4">Max offer amount: ₹ </string>
+    <string name="txt_offer_5">Min Order Value ₹ </string>
+    <string name="txt_screatch_offerr_1">Scratch &amp; Win</string>
+    <string name="txt_apply">Apply</string>
+    <string name="txt_applies">Applied</string>
+    <string name="moq_header">Select quantities for</string>
+    <string name="close_app_msg">Are you sure you want to close app!!</string>
+    <string name="header_200mtr">Location Alert!</string>
+    <string name="txt_200mtr">You can take order inside radius of 200 meter.</string>
+    <string name="cust_location_not">Customer Location not Found</string>
+    <string name="txt_pcs">pcs</string>
+    <string name="txt_enter_add">Enter Address here</string>
+    <string name="txt_offer_apply">Offer Applied</string>
+    <string name="txt_pay_offer_1">Bill Discount Offer Applied of ₹</string>
+    <string name="txt_pay_offer_2">Credited after order delivered ₹</string>
+    <string name="txt_pay_offer_3">Item Free</string>
+    <string name="wheel_1">You won</string>
+    <string name="wheel_2">dial wheel free</string>
+    <string name="Location">Location</string>
+    <string name="search_loca">Search for a location</string>
+    <string name="search_add">Search Address</string>
+    <string name="txt_enter_address">Please Enter Address</string>
+    <string name="txt_enter_city">Please Enter City</string>
+    <string name="txt_enter_state">Please Enter State</string>
+    <string name="txt_enter_zip">Please Enter ZipCode</string>
+    <string name="txt_less_200">less than 200 sq ft</string>
+    <string name="txt_200">200-500sq ft</string>
+    <string name="txt_more500">more than 500 sq ft</string>
+
+
+    <!--    //<string name="wheel_msg_1">3 लाइन आइटम के साथ 2000 की न्यूनतम ऑर्डर राशि पर निःशुल्क व्हील प्राप्त करें</string>-->
+
+</resources>

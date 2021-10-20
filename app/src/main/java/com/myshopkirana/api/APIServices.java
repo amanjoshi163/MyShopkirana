@@ -1,12 +1,16 @@
 package com.myshopkirana.api;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.myshopkirana.model.CityModel;
 import com.myshopkirana.model.ClusterModel;
+import com.myshopkirana.model.CustomerModel;
 
 import java.util.ArrayList;
 
 import io.reactivex.Observable;
+import retrofit2.http.Body;
+import retrofit2.http.Field;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
@@ -29,8 +33,8 @@ public interface APIServices {
 //    Observable<JsonObject> uploadImage(@Part MultipartBody.Part body);
 
 
-//    //api/SalesApp/CustomerAddressUpdateRequest
-//    @POST("/api/SalesApp/CustomerAddressUpdateRequest")
-//    Observable<JsonObject> UpdateCustLocation(@Query("cityid") int cityid);
+//    /https://uat.shopkirana.in/api/Test/GetClusterCustomers
+    @POST("/api/Test/GetClusterCustomers")
+    Observable<ArrayList<CustomerModel>> getCustList(@Body  JsonArray clusterValue);
 
 }

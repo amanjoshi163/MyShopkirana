@@ -67,30 +67,65 @@
             android:layout_height="1dp"
             android:layout_marginTop="10dp"
             android:background="@color/grey" />
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="50dp"
+
+    android:layout_marginLeft="50dp"
+    android:layout_marginTop="10dp"
+    android:background="@color/purple_500"
+    >
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/llMapView"
+        android:background="@color/purple_500"
+        android:text="Map View"
+        android:textSize="12sp"
+        android:padding="@dimen/size10"
+        android:textColor="@color/white"
+        android:layout_gravity="center"
+        android:gravity="center"
+        />
+
+</LinearLayout>
 
         <LinearLayout
-            android:id="@+id/llTabView"
+            android:id="@+id/ll_search_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical"
-            android:visibility="gone">
 
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tabLayout"
+            android:layout_margin="10dp"
+            android:background="@drawable/stock_hkb"
+            android:orientation="horizontal">
+
+
+
+
+
+            <EditText
+                android:id="@+id/et_search_lead"
+                style="@style/CommonStyleSR"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="?attr/actionBarSize"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-
-                app:tabIndicatorColor="@color/purple_500"
-                app:tabRippleColor="@color/grey" />
-
-            <!-- View pager to swipe views -->
-            <androidx.viewpager.widget.ViewPager
-                android:id="@+id/pager"
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent" />
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:padding="10dp"
+                android:hint="Search Address"
+                android:imeOptions="actionDone"
+                android:inputType="textCapWords"
+                android:maxLength="20"
+                android:maxLines="1"
+                android:textSize="14sp" />
         </LinearLayout>
+
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_recycle"
+            android:padding="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
     </LinearLayout>
 </layout>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/ll_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+
+        app:cardCornerRadius="10dp"
+        app:cardElevation="1dp"
+        app:cardMaxElevation="1dp"
+        app:cardUseCompatPadding="true">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/size10">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+
+                android:orientation="vertical"
+                android:padding="5dp">
+
+                <TextView
+                    android:id="@+id/name"
+                    style="@style/CommanStyleAN"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Name"
+
+                    android:textSize="@dimen/size15"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/skCode"
+                    style="@style/CommanStyleAN"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/size5"
+                    android:text="@string/sk_code"
+
+                    android:textSize="@dimen/size15"
+                    android:textStyle="normal" />
+
+
+                <TextView
+
+                    android:id="@+id/txt_add_value"
+                    style="@style/CommanStyleAN"
+                    android:layout_width="match_parent"
+android:text="@string/txt_shipping_address"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/size5"
+                    android:textSize="@dimen/size15"
+
+                    android:visibility="visible" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+</layout>

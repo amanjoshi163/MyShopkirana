@@ -1,25 +1,21 @@
 package com.myshopkirana.utils;
 
 import android.app.Activity;
-import android.util.Log;
 
-import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
 import com.myshopkirana.api.RestClient;
 import com.myshopkirana.model.CityModel;
 import com.myshopkirana.model.ClusterModel;
+import com.myshopkirana.model.CustomerModel;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.MultipartBody;
 
 public class CommonClassForAPI {
     private static Activity mActivity;
@@ -49,11 +45,7 @@ public class CommonClassForAPI {
                     @Override
                     public void onNext(ArrayList<CityModel> o) {
 
-                        CityModel cityModel=new CityModel();
-                        cityModel.setCityid(00);
-                        cityModel.setCityName("Select City");
-                        o.add(cityModel);
-                        Collections.reverse(o);
+
                         daysListDes.onNext(o);
                     }
 
@@ -85,12 +77,7 @@ public class CommonClassForAPI {
                     @Override
                     public void onNext(ArrayList<ClusterModel> o) {
 
-                        ClusterModel clusterModel=new ClusterModel();
-                        clusterModel.setClusterId(00);
-                        clusterModel.setClusterName("Select Cluster");
-                        clusterModel.setClusterLatLngList(new ArrayList<>());
-                        o.add(clusterModel);
-                        Collections.reverse(o);
+
                         daysListDes.onNext(o);
                     }
 
@@ -109,25 +96,20 @@ public class CommonClassForAPI {
                 });
     }
 
-    public void fetchCustomer(final DisposableObserver daysListDes,int cityId) {
-        RestClient.getInstance(mActivity).getService().getCluster(cityId)
+    public void fetchCustomer(final DisposableObserver daysListDes, JsonArray clusterValue) {
+        RestClient.getInstance(mActivity).getService().getCustList(clusterValue)
                 .subscribeOn(Schedulers.io())
 //                .doOnSubscribe(disposable -> Utils.showProgressDialog(mActivity))
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ArrayList<ClusterModel>>() {
+                .subscribe(new Observer<ArrayList<CustomerModel>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                     }
 
                     @Override
-                    public void onNext(ArrayList<ClusterModel> o) {
+                    public void onNext(ArrayList<CustomerModel> o) {
 
-                        ClusterModel clusterModel=new ClusterModel();
-                        clusterModel.setClusterId(00);
-                        clusterModel.setClusterName("Select Cluster");
-                        clusterModel.setClusterLatLngList(new ArrayList<>());
-                        o.add(clusterModel);
-                        Collections.reverse(o);
+
                         daysListDes.onNext(o);
                     }
 

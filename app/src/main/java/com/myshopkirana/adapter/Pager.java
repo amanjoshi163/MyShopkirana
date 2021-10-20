@@ -42,15 +42,13 @@ public class Pager extends FragmentStatePagerAdapter {
             case 0:
                 ListViewFragment tab1 = new ListViewFragment();
                 return tab1;
+
+
             case 1:
 
                 MapViewFragment tab2 = new MapViewFragment(clusterLatLngList);
                 return tab2;
 
-            case 2:
-
-                MapViewFragment tab3 = new MapViewFragment(clusterLatLngList);
-                return tab3;
 
 
             default:
