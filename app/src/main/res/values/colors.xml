@@ -7,4 +7,43 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!---->
+    <color name="grey">#BFBFBF</color>
+    <color name="light_green_back">#e4e4e4</color>
+
+    <color name="chat_gray">#BDC3C7</color>
+    <color name="screen_bg">#d0d0d0</color>
+    <color name="Darkgrey">#9e9b9b</color>
+    <color name="black_transparent">#40000000</color>
+    <color name="dark_grey">#DCDCDC</color>
+    <color name="light_grey">#ECECEC</color>
+    <color name="holo_gray_dark">#424242</color>
+
+
+    <color name="green">#39e600</color>
+    <color name="transparent">#D9F7F7F7</color>
+    <color name="red">#f9151d</color>
+    <color name="light_red">#F08080</color>
+    <color name="grey_10">#EBEBEB</color>
+    <color name="Yellow">#FFFF00</color>
+    <color name="holo_green">#FF6FB847</color>
+    <color name="status_red">#FF0000</color>
+    <color name="status_yellow">#DB9E00</color>
+    <color name="status_orange">#FF7700</color>
+    <color name="status_green">#78D500</color>
+    <color name="status_blue">#00AAD5</color>
+
+
+
+    <color name="shop_close">#E6E6FA</color>
+    <color name="not_vist">#FAEBD7</color>
+    <color name="visit">#bcf5bc</color>
+    <color name="ordered">#ecf5e9</color>
+    <color name="pending">#FFFACD</color>
+
+    <color name="text_color">#666666</color>
+    <color name="green_100">#577124</color>
+    <color name="green_50">#689f39</color>
+    <color name="grey_medium">#B1B1B1</color>
 </resources>

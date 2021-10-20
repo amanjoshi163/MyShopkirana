@@ -6,8 +6,11 @@ import android.util.Log;
 import com.google.gson.JsonObject;
 import com.myshopkirana.api.RestClient;
 import com.myshopkirana.model.CityModel;
+import com.myshopkirana.model.ClusterModel;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Observer;
@@ -45,6 +48,86 @@ public class CommonClassForAPI {
 
                     @Override
                     public void onNext(ArrayList<CityModel> o) {
+
+                        CityModel cityModel=new CityModel();
+                        cityModel.setCityid(00);
+                        cityModel.setCityName("Select City");
+                        o.add(cityModel);
+                        Collections.reverse(o);
+                        daysListDes.onNext(o);
+                    }
+
+
+                    @Override
+                    public void onError(Throwable e) {
+                        // customDialog.dismiss();
+                        daysListDes.onError(e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        //customDialog.dismiss();
+                        daysListDes.onComplete();
+                    }
+                });
+    }
+
+    public void fetchCluster(final DisposableObserver daysListDes,int cityId) {
+        RestClient.getInstance(mActivity).getService().getCluster(cityId)
+                .subscribeOn(Schedulers.io())
+//                .doOnSubscribe(disposable -> Utils.showProgressDialog(mActivity))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ArrayList<ClusterModel>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+
+                    @Override
+                    public void onNext(ArrayList<ClusterModel> o) {
+
+                        ClusterModel clusterModel=new ClusterModel();
+                        clusterModel.setClusterId(00);
+                        clusterModel.setClusterName("Select Cluster");
+                        clusterModel.setClusterLatLngList(new ArrayList<>());
+                        o.add(clusterModel);
+                        Collections.reverse(o);
+                        daysListDes.onNext(o);
+                    }
+
+
+                    @Override
+                    public void onError(Throwable e) {
+                        // customDialog.dismiss();
+                        daysListDes.onError(e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        //customDialog.dismiss();
+                        daysListDes.onComplete();
+                    }
+                });
+    }
+
+    public void fetchCustomer(final DisposableObserver daysListDes, Array[] cityId) {
+        RestClient.getInstance(mActivity).getService().getCluster(cityId)
+                .subscribeOn(Schedulers.io())
+//                .doOnSubscribe(disposable -> Utils.showProgressDialog(mActivity))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ArrayList<ClusterModel>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+
+                    @Override
+                    public void onNext(ArrayList<ClusterModel> o) {
+
+                        ClusterModel clusterModel=new ClusterModel();
+                        clusterModel.setClusterId(00);
+                        clusterModel.setClusterName("Select Cluster");
+                        clusterModel.setClusterLatLngList(new ArrayList<>());
+                        o.add(clusterModel);
+                        Collections.reverse(o);
                         daysListDes.onNext(o);
                     }
 

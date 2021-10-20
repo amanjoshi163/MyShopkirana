@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="CommanstyleAB" parent="@style/Text">
+        <item name="android:fontFamily">@font/avalon_book</item>
+    </style>
+
+    <style name="CommanStyleSF" parent="@style/Text">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+
+    </style>
+
+    <style name="CommanStyleAN" parent="@style/Text">
+        <item name="android:fontFamily">@font/avalon_demi</item>
+    </style>
+
+    <style name="CommonStyleSR" parent="@style/Text">
+        <item name="android:fontFamily">@font/segoeui</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="CommonStyleSB" parent="@style/Text">
+        <item name="android:fontFamily">@font/seguisb</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="CommonStyleB" parent="@style/Text">
+        <item name="android:fontFamily">@font/segoeuib</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+</resources>
+
