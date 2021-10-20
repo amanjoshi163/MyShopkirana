@@ -23,9 +23,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyShopkirqana">
         <activity
-            android:name=".activity.CordinateListActivity"
-            android:exported="true" />
-        <activity
             android:name=".activity.HomeActivity"
             android:exported="true" />
         <activity
