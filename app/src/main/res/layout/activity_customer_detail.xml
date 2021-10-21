@@ -29,7 +29,9 @@
 
             <include
                 android:id="@+id/ll_bottom_sheet"
-                layout="@layout/complete_bottom_sheet" />
+                layout="@layout/complete_bottom_sheet"
+                android:visibility="visible"/>
+
         </LinearLayout>
 
     </LinearLayout>

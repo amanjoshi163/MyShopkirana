@@ -1,168 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-
     <RelativeLayout
-        android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/size10"
         android:background="#fff"
         android:orientation="vertical"
-        android:padding="@dimen/size5"
-        android:layout_marginBottom="@dimen/size10"
+        android:padding="@dimen/size5">
 
-        >
-
-
-        <!--    section 2 skip $ order-->
-
-        <LinearLayout
-            android:id="@+id/ll_sec_2"
+        <RelativeLayout
+            android:id="@+id/bottom_sheet"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="visible">
+            android:layout_height="wrap_content">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/ll_detail"
+
+            <!--    section 2 skip $ order-->
+
+            <LinearLayout
+                android:id="@+id/ll_sec_2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="visible">
 
-                >
-
-
-                <LinearLayout
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/ll_detail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="@dimen/size5">
+
+                    >
 
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:padding="@dimen/size5">
+
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:weightSum="1">
-
-                            <TextView
-                                android:id="@+id/name"
-                                style="@style/CommanStyleAN"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_weight="0.9"
-                                android:text="Name"
-
-                                android:textSize="@dimen/size15"
-                                />
-
+                            android:orientation="vertical">
 
                             <LinearLayout
-                                android:id="@+id/llmap"
-                                android:layout_width="0dp"
-                                android:layout_height="30dp"
-                                android:layout_weight="0.1"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:weightSum="1">
 
-                                android:gravity="center"
-                                android:orientation="horizontal">
-
-                                <androidx.appcompat.widget.AppCompatImageView
-                                    android:layout_width="wrap_content"
+                                <TextView
+                                    android:id="@+id/name"
+                                    style="@style/CommanStyleAN"
+                                    android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
-                                    android:src="@drawable/ic_baseline_map_24" />
+                                    android:layout_weight="0.9"
+                                    android:text="Name"
+
+                                    android:textSize="@dimen/size15" />
+
+
+                                <LinearLayout
+                                    android:id="@+id/llmap"
+                                    android:layout_width="0dp"
+                                    android:layout_height="30dp"
+                                    android:layout_weight="0.1"
+
+                                    android:gravity="center"
+                                    android:orientation="horizontal">
+
+                                    <androidx.appcompat.widget.AppCompatImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:src="@drawable/ic_baseline_map_24" />
+                                </LinearLayout>
                             </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/skCode"
+                                style="@style/CommanStyleAN"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+
+                                android:text="@string/sk_code"
+                                android:textSize="@dimen/size15" />
+
+
+                            <TextView
+
+                                android:id="@+id/txt_add_value"
+                                style="@style/CommanStyleAN"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/size5"
+                                android:text="@string/txt_shipping_address"
+                                android:textSize="@dimen/size15" />
+
                         </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/skCode"
-                            style="@style/CommanStyleAN"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-
-                            android:text="@string/sk_code"
-                            android:textSize="@dimen/size15"
-                             />
-
-
-                        <TextView
-
-                            android:id="@+id/txt_add_value"
-                            style="@style/CommanStyleAN"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/size5"
-                            android:text="@string/txt_shipping_address"
-                            android:textSize="@dimen/size15"
-                            />
 
                     </LinearLayout>
 
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/size15"
-                android:orientation="horizontal"
-                android:weightSum="2">
+                </androidx.cardview.widget.CardView>
 
 
                 <LinearLayout
-                    android:id="@+id/ll_take_order"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/size40"
-
-                    android:layout_weight="1.3"
-                    android:background="@drawable/dashboard_dark_main"
-                    android:orientation="vertical">
-
-                    <TextView
-
-                        style="@style/CommonStyleB"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_margin="@dimen/size10"
-                        android:gravity="center"
-
-                        android:text="Take Shop Photo with Shop Name"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/size12" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/size15"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
 
 
-                </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/ll_take_order"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/size40"
 
-                <LinearLayout
-                    android:id="@+id/ll_skip"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/size40"
-                    android:layout_marginLeft="@dimen/size10"
+                        android:layout_weight="1.3"
+                        android:background="@drawable/dashboard_dark_main"
+                        android:orientation="vertical">
 
-                    android:layout_weight="0.7"
-                    android:background="@drawable/dashboard_dark_main"
-                    android:orientation="vertical">
+                        <TextView
 
-                    <TextView
+                            style="@style/CommonStyleB"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_margin="@dimen/size10"
+                            android:gravity="center"
 
-                        style="@style/CommonStyleB"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:layout_margin="@dimen/size10"
-                        android:gravity="center"
-                        android:text="Not Able to Track"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/size12" />
+                            android:text="Take Shop Photo with Shop Name"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/size12" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_skip"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/size40"
+                        android:layout_marginLeft="@dimen/size10"
+
+                        android:layout_weight="0.7"
+                        android:background="@drawable/dashboard_dark_main"
+                        android:orientation="vertical">
+
+                        <TextView
+
+                            style="@style/CommonStyleB"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_margin="@dimen/size10"
+                            android:gravity="center"
+                            android:text="Not Able to Track"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/size12" />
+
+
+                    </LinearLayout>
 
 
                 </LinearLayout>
@@ -171,8 +172,93 @@
             </LinearLayout>
 
 
-        </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/bottom_sheet_not_able"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/size10"
+
+            android:visibility="gone"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="visible">
 
 
+                <TextView
+                    style="@style/CommonStyleSR"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/map_not_found"
+                    android:textColor="@color/black"
+                    android:textSize="17dp" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/size15"
+                    android:orientation="horizontal">
+
+
+                    <LinearLayout
+                        android:id="@+id/ll_take_photo"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/size40"
+                        android:layout_weight="1"
+                        android:background="@drawable/dashboard_dark_main"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/CommonStyleB"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_margin="@dimen/size10"
+                            android:gravity="center"
+                            android:text="Camera"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/size12" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_cancle"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/size40"
+                        android:layout_marginLeft="@dimen/size10"
+                        android:layout_weight="1"
+                        android:background="@drawable/dashboard_dark_main"
+                        android:orientation="vertical">
+
+                        <TextView
+
+                            style="@style/CommonStyleB"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_margin="@dimen/size10"
+                            android:gravity="center"
+                            android:text="@string/cancel"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/size12" />
+
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
     </RelativeLayout>
 </layout>

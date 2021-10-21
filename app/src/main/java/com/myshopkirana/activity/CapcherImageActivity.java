@@ -35,7 +35,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+
  import io.reactivex.observers.DisposableObserver;
+
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -71,7 +73,7 @@ public class CapcherImageActivity extends AppCompatActivity {
     ActivityCapcherImageBinding mBinding;
     GPSTracker gpsTracker;
     Geocoder geocoder;
-    String localAdress, landmarkArea;
+
     // But item response
     DisposableObserver<Boolean> updateCustomer = new DisposableObserver<Boolean>() {
         @Override
@@ -100,11 +102,17 @@ public class CapcherImageActivity extends AppCompatActivity {
     private String fProfile = "";
     private String uploadFilePath;
 
+
+
+    String localAdress,landmarkArea,shopFoundValue;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_capcher_image);
         customerModel = (CustomerModel) getIntent().getSerializableExtra("model");
+        shopFoundValue =getIntent().getStringExtra("ShopFound");
         initView();
     }
 
@@ -154,9 +162,13 @@ public class CapcherImageActivity extends AppCompatActivity {
                             landmarkArea,
                             customerModel.getLat(),
                             customerModel.getLg(),
-                            customerModel.getShopFound(),
-                            uploadFilePath, customerModel.getNewShippingAddress(),
-                            gpsTracker.getLatitude() + "", gpsTracker.getLongitude() + "");
+                            shopFoundValue,
+                            uploadFilePath,
+                            customerModel.getNewShippingAddress(),
+
+                            gpsTracker.getLatitude()+"",
+                            gpsTracker.getLongitude()+"");
+
                     if (utils.isNetworkAvailable()) {
                         if (commonClassForAPI != null) {
                             commonClassForAPI.updateCustomer(updateCustomer, model);
