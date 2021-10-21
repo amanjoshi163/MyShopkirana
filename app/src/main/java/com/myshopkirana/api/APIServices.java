@@ -44,7 +44,7 @@ public interface APIServices {
 
     @Multipart
     @POST("Test/UploadCustomerShopImage")
-    Observable<ImageResponse> imageUpload(@Part MultipartBody.Part body);
+    Observable<String> imageUpload(@Part MultipartBody.Part body);
 
 
     @POST("Test/UpdateCustomer")

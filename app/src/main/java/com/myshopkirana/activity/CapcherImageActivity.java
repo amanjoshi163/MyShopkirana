@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.core.graphics.PathUtils;
 import androidx.databinding.DataBindingUtil;
 
 import com.myshopkirana.BuildConfig;
@@ -37,6 +38,7 @@ import java.util.List;
 import java.util.Locale;
 
 
+import id.zelory.compressor.Compressor;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.observers.DisposableObserver;
@@ -44,6 +46,7 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import rx.functions.Action1;
 
 public class CapcherImageActivity extends AppCompatActivity {
     ActivityCapcherImageBinding mBinding;
@@ -54,7 +57,7 @@ public class CapcherImageActivity extends AppCompatActivity {
     private String uploadFilePath;
     GPSTracker gpsTracker;
     Geocoder geocoder;
-    String localAdress,landmarkArea,shopFoundValue;
+    String localAdress,landmarkArea,shopFoundValue,mainURl;
 
 
 
@@ -117,7 +120,7 @@ public class CapcherImageActivity extends AppCompatActivity {
                             customerModel.getLat(),
                             customerModel.getLg(),
                             shopFoundValue,
-                            uploadFilePath,customerModel.getNewShippingAddress(),
+                            mainURl,customerModel.getNewShippingAddress(),
                             gpsTracker.getLatitude()+"",gpsTracker.getLongitude()+"");
                     if (utils.isNetworkAvailable()) {
                         if (commonClassForAPI != null) {
@@ -223,7 +226,26 @@ public class CapcherImageActivity extends AppCompatActivity {
 
     private void uploadMultipart() {
         final File fileToUpload = new File(uploadFilePath);
-        uploadImagePath(fileToUpload);
+
+
+
+        //uploadImagePath(fileToUpload);
+        Compressor.getDefault(this)
+                .compressToFileAsObservable(fileToUpload)
+                ///.subscribeOn(Schedulers.io())
+                ///.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<File>() {
+                    @Override
+                    public void call(File file) {
+                        ///compressedImage = file;
+                        uploadImagePath(file);
+                    }
+                }, throwable -> showError(throwable.getMessage()));
+    }
+
+
+
+
         /*new Compressor(this)
                 .compressToFileAsFlowable(fileToUpload)
                 .subscribeOn(Schedulers.io())
@@ -245,7 +267,6 @@ public class CapcherImageActivity extends AppCompatActivity {
                 });
 
         uploadImagePath(fileToUpload);*/
-    }
 
     private void showError(String errorMessage) {
         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
@@ -261,13 +282,13 @@ public class CapcherImageActivity extends AppCompatActivity {
     }
 
     // upload image
-    private final DisposableObserver<ImageResponse> imageObserver = new DisposableObserver<ImageResponse>() {
+    private final DisposableObserver<String> imageObserver = new DisposableObserver<String>() {
         @Override
-        public void onNext(@NotNull ImageResponse response) {
+        public void onNext(@NotNull String response) {
             try {
                 Utils.hideProgressDialog(CapcherImageActivity.this);
                 if (response != null) {
-
+                    mainURl=BuildConfig.apiEndpoint+response;
                 } else {
                     Toast.makeText(CapcherImageActivity.this, "Image Not Uploaded", Toast.LENGTH_SHORT).show();
                 }
