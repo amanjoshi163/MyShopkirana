@@ -20,16 +20,22 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHolder> {
+public class
+CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHolder> {
 
 
-    private final Activity activity;
-    private final ArrayList<CustomerModel> itemLists;
+    private   Activity activity;
+    private   ArrayList<CustomerModel> itemLists;
 
 
     public CustomerAdapter(Activity activity, ArrayList<CustomerModel> itemLists) {
         this.activity = activity;
         this.itemLists = itemLists;
+    }
+
+    public void updateList(ArrayList<CustomerModel> list){
+      this.itemLists = list;
+        notifyDataSetChanged();
     }
 
 

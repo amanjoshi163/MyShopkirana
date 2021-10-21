@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/size10">
+            android:padding="@dimen/size5">
 
 
             <LinearLayout
@@ -32,15 +32,43 @@
                 android:orientation="vertical"
                 android:padding="5dp">
 
-                <TextView
-                    android:id="@+id/name"
-                    style="@style/CommanStyleAN"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Name"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
 
-                    android:textSize="@dimen/size15"
-                    android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/name"
+                        style="@style/CommanStyleAN"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.9"
+                        android:text="Name"
+
+                        android:textSize="@dimen/size15"
+                        android:textStyle="bold" />
+
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="20dp"
+                        android:orientation="horizontal"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_weight="0.1">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:layout_gravity="center"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_baseline_location_blue"
+                             />
+                    </LinearLayout>
+                </LinearLayout>
+
+
 
                 <TextView
                     android:id="@+id/skCode"
@@ -59,9 +87,9 @@
                     android:id="@+id/txt_add_value"
                     style="@style/CommanStyleAN"
                     android:layout_width="match_parent"
-android:text="@string/txt_shipping_address"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/size5"
+                    android:text="@string/txt_shipping_address"
                     android:textSize="@dimen/size15"
 
                     android:visibility="visible" />

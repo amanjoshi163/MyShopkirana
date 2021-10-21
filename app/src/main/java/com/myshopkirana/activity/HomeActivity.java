@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -33,17 +35,16 @@ import java.util.ArrayList;
 import io.reactivex.observers.DisposableObserver;
 
 public class HomeActivity extends AppCompatActivity {
-    private Utils utils;
-    private ActivityHomeBinding mBinding;
+    CustomerAdapter customerAdapter;
+    ArrayList<CustomerModel> custMainList;
     private final DisposableObserver<ArrayList<CustomerModel>> objcutomer = new DisposableObserver<ArrayList<CustomerModel>>() {
 
         @Override
         public void onNext(ArrayList<CustomerModel> custList) {
             try {
-                mBinding.rvRecycle.setLayoutManager(new LinearLayoutManager(HomeActivity.this));
-
-                CustomerAdapter customerAdapter = new CustomerAdapter(HomeActivity.this, custList);
-                mBinding.rvRecycle.setAdapter(customerAdapter);
+                custMainList = new ArrayList<>();
+                custMainList = custList;
+                customerAdapter.updateList(custMainList);
                 Utils.hideProgressDialog(HomeActivity.this);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -62,6 +63,8 @@ public class HomeActivity extends AppCompatActivity {
 
         }
     };
+    private Utils utils;
+    private ActivityHomeBinding mBinding;
     private ArrayList<CityModel> cMainList;
     private final DisposableObserver<ArrayList<CityModel>> objCity = new DisposableObserver<ArrayList<CityModel>>() {
 
@@ -167,14 +170,17 @@ public class HomeActivity extends AppCompatActivity {
         commonClassForAPI = CommonClassForAPI.getInstance(this);
         cMainList = new ArrayList<>();
         clusterList = new ArrayList<>();
+        custMainList = new ArrayList<>();
         utils = new Utils(HomeActivity.this);
         mBinding.toolbarMyLead.back.setVisibility(View.INVISIBLE);
-
+        mBinding.rvRecycle.setLayoutManager(new LinearLayoutManager(HomeActivity.this));
+        customerAdapter = new CustomerAdapter(HomeActivity.this, custMainList);
+        mBinding.rvRecycle.setAdapter(customerAdapter);
 
         mBinding.spnCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 int cityid = cMainList.get(pos).getCityid();
-Utils.showProgressDialog(HomeActivity.this);
+                Utils.showProgressDialog(HomeActivity.this);
                 callClusterApi(cityid);
             }
 
@@ -214,6 +220,30 @@ Utils.showProgressDialog(HomeActivity.this);
             Utils.hideProgressDialog(HomeActivity.this);
             Utils.setToast(HomeActivity.this, getString(R.string.internet_connection));
         }
+
+        mBinding.etSearchCust.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (customerAdapter != null) {
+                    filter(s.toString());
+                }
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                // filter your list from your input
+
+                //you can use runnable postDelayed like 500 ms to delay search text
+            }
+        });
     }
 
     private void calCustomerList(int clusterId) {
@@ -243,4 +273,18 @@ Utils.showProgressDialog(HomeActivity.this);
         objcutomer.dispose();
     }
 
+    void filter(String text) {
+
+        ArrayList<CustomerModel> temp = new ArrayList();
+        for (CustomerModel d : custMainList) {
+            //or use .equal(text) with you want equal match
+            //use .toLowerCase() for better matches
+
+            if (d.getShippingAddress()!=null && d.getShippingAddress().toLowerCase().contains(text.toLowerCase())) {
+                temp.add(d);
+            }
+        }
+        //update recyclerview
+        customerAdapter.updateList(temp);
+    }
 }
