@@ -109,14 +109,14 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
         mBinding.llBottomSheet.llTakeOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callRunTimePermissions(true);
+                callRunTimePermissions("true");
             }
         });
 
         mBinding.llBottomSheet.llTakePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callRunTimePermissions(false);
+                callRunTimePermissions("false");
 
             }
         });
@@ -130,13 +130,15 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
         });
     }
 
-    public void callRunTimePermissions(boolean shopFound) {
+    public void callRunTimePermissions(String shopFound) {
+
         String[] permissions = {Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE};
         Permissions.check(CustomerDetailActivity.this/*context*/, permissions, null/*rationale*/, null/*options*/, new PermissionHandler() {
             @Override
             public void onGranted() {
                 Log.e("onDenied", "onGranted");
-                startActivity(new Intent(CustomerDetailActivity.this,CapcherImageActivity.class).putExtra("model",customerModel).putExtra("ShopFound",shopFound));
+                startActivity(new Intent(CustomerDetailActivity.this,CapcherImageActivity.class).
+                        putExtra("model",customerModel).putExtra("ShopFound",shopFound));
             }
 
             @Override

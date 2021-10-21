@@ -80,19 +80,6 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
                 latLngList.add(new LatLng(cList.get(k).getLat(),
                         cList.get(k).getLng()));
 
-                googleMapMain.addMarker(new MarkerOptions().position(new
-                                LatLng(cList.get(k).getLat(),
-                                cList.get(k).getLng()))
-                                .icon(BitmapDescriptorFactory.defaultMarker())
-
-                                .title(cList.get(k).getLat() + "")
-//
-                                .anchor(0.5f, 1)
-                                .zIndex(1.0f)
-                );
-
-                //  hashMap.put(marker, dashboardModel.get(k));
-
 
             }
             googleMapMain.animateCamera(CameraUpdateFactory.newLatLngZoom(new

@@ -135,18 +135,18 @@ public class CommonClassForAPI {
     }
 
     // upload profile image
-    public void uploadImage(DisposableObserver<ImageResponse> observer, MultipartBody.Part body) {
+    public void uploadImage(DisposableObserver<String> observer, MultipartBody.Part body) {
         RestClient.getInstance().getService().imageUpload(body)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ImageResponse>() {
+                .subscribe(new Observer<String>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(@NonNull ImageResponse s) {
+                    public void onNext(@NonNull String s) {
                         observer.onNext(s);
                     }
 

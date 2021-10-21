@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.core.graphics.PathUtils;
 import androidx.databinding.DataBindingUtil;
 
 import com.myshopkirana.BuildConfig;
@@ -38,77 +39,24 @@ import java.util.List;
 import java.util.Locale;
 
 
- import io.reactivex.observers.DisposableObserver;
-
+import id.zelory.compressor.Compressor;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import rx.functions.Action1;
 
 public class CapcherImageActivity extends AppCompatActivity {
-    // upload image
-    private final DisposableObserver<ImageResponse> imageObserver = new DisposableObserver<ImageResponse>() {
-        @Override
-        public void onNext(@NotNull ImageResponse response) {
-            try {
-                Utils.hideProgressDialog(CapcherImageActivity.this);
-                if (response != null) {
-
-                } else {
-                    Toast.makeText(CapcherImageActivity.this, "Image Not Uploaded", Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            e.printStackTrace();
-            Utils.hideProgressDialog(CapcherImageActivity.this);
-        }
-
-        @Override
-        public void onComplete() {
-            Utils.hideProgressDialog(CapcherImageActivity.this);
-        }
-    };
     ActivityCapcherImageBinding mBinding;
-    GPSTracker gpsTracker;
-    Geocoder geocoder;
-     List<Address> addresses;
-
-    // But item response
-    DisposableObserver<Boolean> updateCustomer = new DisposableObserver<Boolean>() {
-        @Override
-        public void onNext(Boolean jsonObject) {
-            Utils.hideProgressDialog(CapcherImageActivity.this);
-            if (jsonObject) {
-                startActivity(new Intent(CapcherImageActivity.this, HomeActivity.class));
-                finish();
-            }
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            Utils.hideProgressDialog(CapcherImageActivity.this);
-            e.printStackTrace();
-        }
-
-        @Override
-        public void onComplete() {
-            Utils.hideProgressDialog(CapcherImageActivity.this);
-        }
-    };
     private CustomerModel customerModel;
     private Utils utils;
     private CommonClassForAPI commonClassForAPI;
     private String fProfile = "";
     private String uploadFilePath;
-
-
-
-    String localAdress,landmarkArea,shopFoundValue;
-
+    GPSTracker gpsTracker;
+    Geocoder geocoder;
+    String localAdress,landmarkArea,shopFoundValue,mainURl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,11 +64,11 @@ public class CapcherImageActivity extends AppCompatActivity {
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_capcher_image);
         customerModel = (CustomerModel) getIntent().getSerializableExtra("model");
         shopFoundValue =getIntent().getStringExtra("ShopFound");
+        Toast.makeText(this, ">>"+shopFoundValue, Toast.LENGTH_SHORT).show();
         initView();
     }
 
     private void initView() {
-        geocoder = new Geocoder(this, Locale.getDefault());
         utils = new Utils(this);
         commonClassForAPI = CommonClassForAPI.getInstance(this);
         geocoder = new Geocoder(this, Locale.getDefault());
@@ -130,14 +78,15 @@ public class CapcherImageActivity extends AppCompatActivity {
         mBinding.name.setText(getString(R.string.txt_Shop_Name) + ": " + customerModel.getShopName());
         mBinding.txtAddValue.setText(getString(R.string.txt_Shop_Address) + ": " + customerModel.getShippingAddress());
 
-        if (gpsTracker != null) {
-              try {
+        if (gpsTracker!=null){
+            ;
+          /*  try {
                 addresses = geocoder.getFromLocation(gpsTracker.getLatitude(), gpsTracker.getLongitude(), 1);
                 localAdress = addresses.get(0).getLocality();
                 landmarkArea = addresses.get(0).getSubLocality();
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+            }*/
             gpsTracker.getLongitude();
         }
 
@@ -158,10 +107,14 @@ public class CapcherImageActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (uploadFilePath == null) {
                     Utils.setToast(getApplicationContext(), "Please Upload Shop Image");
-                } else {
-                    String    fullAddress="";
-
+                }else {
+                    String fullAddress = "";
+                    Geocoder geocoder;
+                    gpsTracker=new GPSTracker(CapcherImageActivity.this);
+                    List<Address> addresses;
+                    geocoder = new Geocoder(CapcherImageActivity.this, Locale.ENGLISH);
                     try {
+
                         addresses = geocoder.getFromLocation(gpsTracker.getLatitude(), gpsTracker.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
                         Log.e("DaysBeatList_model", addresses.toString());
                         String address = "" + addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
@@ -170,12 +123,11 @@ public class CapcherImageActivity extends AppCompatActivity {
                         String country = "" + addresses.get(0).getCountryName();
                         String postalCode = "" + addresses.get(0).getPostalCode();
                         String knownName = "" + addresses.get(0).getFeatureName();
-                         fullAddress = address + "," + city + "," + postalCode + "," + state + "," + knownName + "," + country;
+                        fullAddress = address + "," + city + "," + postalCode + "," + state + "," + knownName + "," + country;
 
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
                     CustomerModel model = new CustomerModel(customerModel.getCustomerId(),
                             customerModel.getSkcode(),
                             customerModel.getShopName(),
@@ -184,14 +136,12 @@ public class CapcherImageActivity extends AppCompatActivity {
                             customerModel.getLat(),
                             customerModel.getLg(),
                             shopFoundValue,
-                            uploadFilePath,
+                            mainURl,
                             fullAddress,
-                            gpsTracker.getLatitude(),
-                            gpsTracker.getLongitude());
-
+                            gpsTracker.getLatitude(),gpsTracker.getLongitude());
                     if (utils.isNetworkAvailable()) {
                         if (commonClassForAPI != null) {
-                            commonClassForAPI.updateCustomer(updateCustomer, model);
+                            commonClassForAPI.updateCustomer(updateCustomer,model);
                         }
                     } else {
                         Utils.setToast(getApplicationContext(), "No internet Connection");
@@ -203,8 +153,31 @@ public class CapcherImageActivity extends AppCompatActivity {
         });
     }
 
+    // But item response
+    DisposableObserver<Boolean> updateCustomer = new DisposableObserver<Boolean>() {
+        @Override
+        public void onNext(Boolean jsonObject) {
+            Utils.hideProgressDialog(CapcherImageActivity.this);
+            if (jsonObject){
+                startActivity(new Intent(CapcherImageActivity.this,HomeActivity.class));
+                finish();
+            }
+        }
+        @Override
+        public void onError(Throwable e) {
+            Utils.hideProgressDialog(CapcherImageActivity.this);
+            e.printStackTrace();
+        }
+
+        @Override
+        public void onComplete() {
+            Utils.hideProgressDialog(CapcherImageActivity.this);
+        }
+    };
+
+
     private void chooseImage(Context context) {
-        final CharSequence[] optionsMenu = {"Take Photo", "Exit"}; // create a menuOption Array
+        final CharSequence[] optionsMenu = {"Take Photo","Exit"}; // create a menuOption Array
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setItems(optionsMenu, new DialogInterface.OnClickListener() {
             @Override
@@ -271,34 +244,18 @@ public class CapcherImageActivity extends AppCompatActivity {
     private void uploadMultipart() {
         final File fileToUpload = new File(uploadFilePath);
 
-
-        try {
-//            File comprssFile=  new Compressor(this).compressToFile(fileToUpload);
-            uploadImagePath(fileToUpload);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
-//        new Compressor(CapcherImageActivity.this)
-//                .compressToFileAsFlowable(fileToUpload)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Consumer<File>() {
-//                    @Override
-//                    public void accept(File file) {
-//                        File compressedImage = file;
-//
-//                        uploadImagePath(compressedImage);
-//                        //mBinding.scroll.fullScroll(View.FOCUS_DOWN);
-//                    }
-//                }, new Consumer<Throwable>() {
-//                    @Override
-//                    public void accept(Throwable throwable) {
-//                        throwable.printStackTrace();
-//                       /// Toast.makeText(CustomerSignActivity.this, "" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-
-
+        //uploadImagePath(fileToUpload);
+        Compressor.getDefault(this)
+                .compressToFileAsObservable(fileToUpload)
+                ///.subscribeOn(Schedulers.io())
+                ///.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<File>() {
+                    @Override
+                    public void call(File file) {
+                        ///compressedImage = file;
+                        uploadImagePath(file);
+                    }
+                }, throwable -> showError(throwable.getMessage()));
     }
 
     private void showError(String errorMessage) {
@@ -313,5 +270,33 @@ public class CapcherImageActivity extends AppCompatActivity {
         Utils.showProgressDialog(this);
         commonClassForAPI.uploadImage(imageObserver, body);
     }
+
+    // upload image
+    private final DisposableObserver<String> imageObserver = new DisposableObserver<String>() {
+        @Override
+        public void onNext(@NotNull String response) {
+            try {
+                Utils.hideProgressDialog(CapcherImageActivity.this);
+                if (response != null) {
+                    mainURl=BuildConfig.apiEndpoint+response;
+                } else {
+                    Toast.makeText(CapcherImageActivity.this, "Image Not Uploaded", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            e.printStackTrace();
+            Utils.hideProgressDialog(CapcherImageActivity.this);
+        }
+
+        @Override
+        public void onComplete() {
+            Utils.hideProgressDialog(CapcherImageActivity.this);
+        }
+    };
 
 }
