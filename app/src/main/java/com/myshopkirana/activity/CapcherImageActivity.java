@@ -54,7 +54,7 @@ public class CapcherImageActivity extends AppCompatActivity {
     private String uploadFilePath;
     GPSTracker gpsTracker;
     Geocoder geocoder;
-    String localAdress,landmarkArea;
+    String localAdress,landmarkArea,shopFoundValue;
 
 
 
@@ -63,6 +63,7 @@ public class CapcherImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_capcher_image);
         customerModel = (CustomerModel) getIntent().getSerializableExtra("model");
+        shopFoundValue =getIntent().getStringExtra("ShopFound");
         initView();
     }
 
@@ -115,7 +116,7 @@ public class CapcherImageActivity extends AppCompatActivity {
                             landmarkArea,
                             customerModel.getLat(),
                             customerModel.getLg(),
-                            customerModel.getShopFound(),
+                            shopFoundValue,
                             uploadFilePath,customerModel.getNewShippingAddress(),
                             gpsTracker.getLatitude()+"",gpsTracker.getLongitude()+"");
                     if (utils.isNetworkAvailable()) {
