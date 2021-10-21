@@ -3,6 +3,7 @@ package com.myshopkirana.activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
@@ -33,6 +34,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 
@@ -73,6 +75,7 @@ public class CapcherImageActivity extends AppCompatActivity {
     ActivityCapcherImageBinding mBinding;
     GPSTracker gpsTracker;
     Geocoder geocoder;
+     List<Address> addresses;
 
     // But item response
     DisposableObserver<Boolean> updateCustomer = new DisposableObserver<Boolean>() {
@@ -117,6 +120,7 @@ public class CapcherImageActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        geocoder = new Geocoder(this, Locale.getDefault());
         utils = new Utils(this);
         commonClassForAPI = CommonClassForAPI.getInstance(this);
         geocoder = new Geocoder(this, Locale.getDefault());
@@ -127,13 +131,13 @@ public class CapcherImageActivity extends AppCompatActivity {
         mBinding.txtAddValue.setText(getString(R.string.txt_Shop_Address) + ": " + customerModel.getShippingAddress());
 
         if (gpsTracker != null) {
-            /*  try {
+              try {
                 addresses = geocoder.getFromLocation(gpsTracker.getLatitude(), gpsTracker.getLongitude(), 1);
                 localAdress = addresses.get(0).getLocality();
                 landmarkArea = addresses.get(0).getSubLocality();
             } catch (IOException e) {
                 e.printStackTrace();
-            }*/
+            }
             gpsTracker.getLongitude();
         }
 
@@ -155,6 +159,23 @@ public class CapcherImageActivity extends AppCompatActivity {
                 if (uploadFilePath == null) {
                     Utils.setToast(getApplicationContext(), "Please Upload Shop Image");
                 } else {
+                    String    fullAddress="";
+
+                    try {
+                        addresses = geocoder.getFromLocation(gpsTracker.getLatitude(), gpsTracker.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                        Log.e("DaysBeatList_model", addresses.toString());
+                        String address = "" + addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                        String city = "" + addresses.get(0).getLocality();
+                        String state = "" + addresses.get(0).getAdminArea();
+                        String country = "" + addresses.get(0).getCountryName();
+                        String postalCode = "" + addresses.get(0).getPostalCode();
+                        String knownName = "" + addresses.get(0).getFeatureName();
+                         fullAddress = address + "," + city + "," + postalCode + "," + state + "," + knownName + "," + country;
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                     CustomerModel model = new CustomerModel(customerModel.getCustomerId(),
                             customerModel.getSkcode(),
                             customerModel.getShopName(),
@@ -164,10 +185,9 @@ public class CapcherImageActivity extends AppCompatActivity {
                             customerModel.getLg(),
                             shopFoundValue,
                             uploadFilePath,
-                            customerModel.getNewShippingAddress(),
-
-                            gpsTracker.getLatitude()+"",
-                            gpsTracker.getLongitude()+"");
+                            fullAddress,
+                            gpsTracker.getLatitude(),
+                            gpsTracker.getLongitude());
 
                     if (utils.isNetworkAvailable()) {
                         if (commonClassForAPI != null) {

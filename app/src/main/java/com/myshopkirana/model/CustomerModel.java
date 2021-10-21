@@ -27,15 +27,15 @@ public class CustomerModel implements Serializable {
     @SerializedName("NewShippingAddress")
     private String NewShippingAddress;
     @SerializedName("Newlat")
-    private String Newlat;
+    private double Newlat;
     @SerializedName("Newlg")
-    private String Newlg;
+    private double Newlg;
 
 
 
     public CustomerModel(int customerId, String skcode, String shopName, String shippingAddress, String landMark,
                          double lat, double lg, String shopFound, String captureImagePath,
-                         String newShippingAddress, String newlat, String newlg) {
+                         String newShippingAddress, double newlat, double newlg) {
        this.CustomerId = customerId;
         this.Skcode = skcode;
         this.ShopName = shopName;
@@ -74,19 +74,19 @@ public class CustomerModel implements Serializable {
         NewShippingAddress = newShippingAddress;
     }
 
-    public String getNewlat() {
+    public double getNewlat() {
         return Newlat;
     }
 
-    public void setNewlat(String newlat) {
+    public void setNewlat(double newlat) {
         Newlat = newlat;
     }
 
-    public String getNewlg() {
+    public double getNewlg() {
         return Newlg;
     }
 
-    public void setNewlg(String newlg) {
+    public void setNewlg(double newlg) {
         Newlg = newlg;
     }
 
