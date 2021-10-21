@@ -5,14 +5,18 @@ import com.google.gson.JsonObject;
 import com.myshopkirana.model.CityModel;
 import com.myshopkirana.model.ClusterModel;
 import com.myshopkirana.model.CustomerModel;
+import com.myshopkirana.model.ImageResponse;
 
 import java.util.ArrayList;
 
 import io.reactivex.Observable;
+import okhttp3.MultipartBody;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Query;
 
 /**
@@ -36,5 +40,14 @@ public interface APIServices {
 //    /https://uat.shopkirana.in/api/Test/GetClusterCustomers
     @POST("/api/Test/GetClusterCustomers")
     Observable<ArrayList<CustomerModel>> getCustList(@Body  JsonArray clusterValue);
+
+    @Multipart
+    @POST("Test/UploadCustomerShopImage")
+    Observable<ImageResponse> imageUpload(@Part MultipartBody.Part body);
+
+
+    @POST("Test/UpdateCustomer")
+    Observable<JsonObject> getResponse(@Body CustomerModel customerModel);
+
 
 }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
 
     <RelativeLayout
@@ -43,8 +42,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
 
-                        android:orientation="vertical"
-                     >
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/name"
@@ -73,9 +71,9 @@
                             android:id="@+id/txt_add_value"
                             style="@style/CommanStyleAN"
                             android:layout_width="match_parent"
-                            android:text="@string/txt_shipping_address"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/size5"
+                            android:text="@string/txt_shipping_address"
                             android:textSize="@dimen/size15"
 
                             android:visibility="visible" />
@@ -100,7 +98,6 @@
                     android:id="@+id/ll_take_order"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/size40"
-
                     android:layout_weight="1.3"
                     android:background="@drawable/dashboard_dark_main"
                     android:orientation="vertical">
@@ -113,7 +110,6 @@
                         android:layout_gravity="center"
                         android:layout_margin="@dimen/size10"
                         android:gravity="center"
-
                         android:text="Take Shop Photo with Shop Name"
                         android:textColor="@color/white"
                         android:textSize="@dimen/size12" />

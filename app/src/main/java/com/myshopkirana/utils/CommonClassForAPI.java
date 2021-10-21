@@ -1,21 +1,27 @@
 package com.myshopkirana.utils;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.myshopkirana.api.RestClient;
 import com.myshopkirana.model.CityModel;
 import com.myshopkirana.model.ClusterModel;
 import com.myshopkirana.model.CustomerModel;
+import com.myshopkirana.model.ImageResponse;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.MultipartBody;
 
 public class CommonClassForAPI {
     private static Activity mActivity;
@@ -128,6 +134,34 @@ public class CommonClassForAPI {
                 });
     }
 
+    // upload profile image
+    public void uploadImage(DisposableObserver<ImageResponse> observer, MultipartBody.Part body) {
+        RestClient.getInstance().getService().imageUpload(body)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ImageResponse>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(@NonNull ImageResponse s) {
+                        observer.onNext(s);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                        observer.onError(e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        observer.onComplete();
+                    }
+                });
+    }
+
 //
 //
 //    // chart API
@@ -161,5 +195,34 @@ public class CommonClassForAPI {
 //    }
 //
 
+    //buy product
+    public void updateCustomer(DisposableObserver fetchProductDes, CustomerModel model) {
+        RestClient.getInstance().getService().getResponse(model)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(disposable -> Utils.showProgressDialog(mActivity))
+                .subscribe(new Observer<JsonObject>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(JsonObject object) {
+                        fetchProductDes.onNext(object);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d("TAG", "Error:" + e.toString());
+                        fetchProductDes.onError(e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        fetchProductDes.onComplete();
+                    }
+                });
+    }
 
 }

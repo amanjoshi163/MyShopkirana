@@ -280,7 +280,7 @@ public class HomeActivity extends AppCompatActivity {
             //or use .equal(text) with you want equal match
             //use .toLowerCase() for better matches
 
-            if (d.getShippingAddress()!=null && d.getShippingAddress().toLowerCase().contains(text.toLowerCase())) {
+            if (d.getShippingAddress() != null && d.getShippingAddress().toLowerCase().contains(text.toLowerCase())) {
                 temp.add(d);
             }
         }

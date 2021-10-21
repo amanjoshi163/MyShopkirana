@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar_arrow" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/ll_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="5dp"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="1dp"
+                app:cardMaxElevation="1dp"
+                app:cardUseCompatPadding="true">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/size5">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:orientation="vertical"
+                        android:padding="5dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:weightSum="1">
+
+                            <TextView
+                                android:id="@+id/name"
+                                style="@style/CommanStyleAN"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="0.9"
+                                android:text="Name"
+
+                                android:textSize="@dimen/size15"
+                                android:textStyle="bold" />
+
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center"
+                                android:layout_weight="0.1"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                                <androidx.appcompat.widget.AppCompatImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_baseline_location_blue" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+
+                        <TextView
+                            android:id="@+id/skCode"
+                            style="@style/CommanStyleAN"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/size5"
+                            android:text="@string/sk_code"
+
+                            android:textSize="@dimen/size15"
+                            android:textStyle="normal" />
+
+                        <TextView
+
+                            android:id="@+id/txt_add_value"
+                            style="@style/CommanStyleAN"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/size5"
+                            android:text="@string/txt_shipping_address"
+                            android:textSize="@dimen/size15"
+
+                            android:visibility="visible" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/size5"
+                android:layout_marginTop="@dimen/size10"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/ll_take_order"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/size40"
+                    android:background="@drawable/dashboard_dark_main"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/CommonStyleB"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_margin="@dimen/size10"
+                        android:gravity="center"
+                        android:text="Take Shop Photo with Shop Name"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/size12" />
+
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <TextView
+                style="@style/CommonStyleB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/size10"
+
+                android:text="Correct Shop Photo, Along with Shop"
+                android:textColor="@color/black"
+                android:textSize="@dimen/size14" />
+
+
+            <ImageView
+                android:id="@+id/iv_shop"
+                android:layout_width="match_parent"
+                android:layout_height="280dp"
+                android:src="@android:drawable/ic_menu_camera"
+                android:layout_marginTop="@dimen/size10"
+                android:layout_marginLeft="@dimen/size10"
+                android:layout_marginRight="@dimen/size10"
+                android:scaleType="centerInside"/>
+
+            <Button
+                android:id="@+id/bt_submit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/size10"
+                android:layout_marginRight="@dimen/size10"
+                android:layout_gravity="right"
+                android:text="Submit"/>
+
+
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+</layout>

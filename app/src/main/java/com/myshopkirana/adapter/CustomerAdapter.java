@@ -52,12 +52,7 @@ CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHolder> {
         try {
             CustomerModel model = itemLists.get(i);
             viewHolder.mBinding.skCode.setText(activity.getResources().getString(R.string.sk_code) + ": " + model.getSkcode());
-
-
             viewHolder.mBinding.name.setText(activity.getResources().getString(R.string.txt_Shop_Name)+": " + model.getShopName());
-
-
-
             viewHolder.mBinding.txtAddValue.setText(activity.getResources().getString(R.string.txt_Shop_Address)+": " + model.getShippingAddress());
 
 
