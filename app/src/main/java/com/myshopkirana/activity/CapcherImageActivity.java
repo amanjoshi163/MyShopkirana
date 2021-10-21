@@ -222,7 +222,8 @@ public class CapcherImageActivity extends AppCompatActivity {
 
     private void uploadMultipart() {
         final File fileToUpload = new File(uploadFilePath);
-        new Compressor(this)
+        uploadImagePath(fileToUpload);
+        /*new Compressor(this)
                 .compressToFileAsFlowable(fileToUpload)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -242,7 +243,7 @@ public class CapcherImageActivity extends AppCompatActivity {
                     }
                 });
 
-        uploadImagePath(fileToUpload);
+        uploadImagePath(fileToUpload);*/
     }
 
     private void showError(String errorMessage) {
