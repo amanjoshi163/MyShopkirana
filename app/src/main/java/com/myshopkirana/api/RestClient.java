@@ -41,8 +41,7 @@ public class RestClient {
                         Request request = chain.request();
                         Response response = chain.proceed(request);
                         if (response.code() == 200) {
-//                            if (!request.url().toString().contains("/token") && !request.url().toString().contains("appVersion")
-//                                    && !request.url().toString().contains("imageupload") && !request.url().toString().contains("UploadShopCloseFile")) {
+                            if (!request.url().toString().contains("UploadCustomerShopImage") ) {
                             try {
                                 if (response.body() != null) {
                                     JSONObject jsonObject = new JSONObject();
@@ -65,7 +64,7 @@ public class RestClient {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-//                            }
+                            }
 //                        }
                         }
                         return response;

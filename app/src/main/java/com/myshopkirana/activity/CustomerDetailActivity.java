@@ -57,8 +57,9 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
     GoogleMap googleMapMain;
     private ActivityCustomerDetailBinding mBinding;
     private CustomerModel customerModel;
-    private LatLng cLatLng, destLatLng;
+    private LatLng cLatLng;
     private PolylineOptions lineOptions;
+    private String destLatLng;
     private GPSTracker gpsTracker;
     private ArrayList<LatLng> points = new ArrayList<>();
 
@@ -89,7 +90,7 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
         mBinding.llBottomSheet.llmap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String strUri = "http://maps.google.com/maps?q=loc:" + customerModel.getLat() + "," + customerModel.getLg() + " (" + customerModel.getShippingAddress() + ")";
+                 String strUri = "http://maps.google.co.in/maps?q=" + customerModel.getShippingAddress() + " (" + customerModel.getShippingAddress() + ")";
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(strUri));
                     intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
                     startActivity(intent);
@@ -124,8 +125,9 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
         mBinding.llBottomSheet.llCancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              onBackPressed();
-
+//              onBackPressed();
+                mBinding.llBottomSheet.bottomSheet.setVisibility(View.VISIBLE);
+                mBinding.llBottomSheet.bottomSheetNotAble.setVisibility(View.GONE);
             }
         });
     }
@@ -173,8 +175,9 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
 
 
         cLatLng = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
-        destLatLng = new LatLng(customerModel.getLat(), customerModel.getLg());
-        drawRoute(cLatLng, destLatLng);
+//        destLatLng = new LatLng(customerModel.getLat(), customerModel.getLg());
+        destLatLng =  customerModel.getShippingAddress();
+        drawRoute(cLatLng, destLatLng,customerModel);
     }
     public static Bitmap scaleBitmap(Bitmap bitmap, int newWidth, int newHeight, String skcode) {
         Bitmap scaledBitmap = Bitmap.createBitmap(newWidth, newHeight, Bitmap.Config.ARGB_8888);
@@ -200,7 +203,7 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
     }
 
 
-    private void drawRoute(LatLng origin, LatLng dest) {
+    private void drawRoute(LatLng origin, String dest, CustomerModel customerModel) {
 
          googleMapMain.addMarker(new MarkerOptions()
                 .icon(BitmapDescriptorFactory.defaultMarker())
@@ -210,11 +213,11 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
                 .position(origin));
 
         Bitmap markerBitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.green_tag);
-        markerBitmap1 = scaleBitmap(markerBitmap1, 150, 90, customerModel.getSkcode());
+        markerBitmap1 = scaleBitmap(markerBitmap1, 150, 90, this.customerModel.getSkcode());
         googleMapMain.addMarker(new MarkerOptions()
-                .position(dest)
+                .position(new LatLng(customerModel.getLat(),customerModel.getLg()))
                 .anchor(0.5f, 0.5f)
-                .title(customerModel.getSkcode())
+                .title(this.customerModel.getSkcode())
                 .icon(BitmapDescriptorFactory.fromBitmap(markerBitmap1)));
 
         String url = getUrl(origin, dest);
@@ -225,7 +228,7 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
         FetchUrl.execute(url);
     }
 
-    private String getUrl(LatLng origin, LatLng dest) {
+    private String getUrl(LatLng origin, String dest) {
 
 
         //  String url = "https://maps.googleapis.com/maps/api/directions/"+output+"?"+parameters + "&key=" + MY_API_KEY
@@ -233,7 +236,7 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
         String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
 
         // Destination of route
-        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+        String str_dest = "destination=" + dest;
 
 
         // Sensor enabled
