@@ -97,10 +97,35 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
             }
         });
 
+        mBinding.llBottomSheet.llSkip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBinding.llBottomSheet.bottomSheet.setVisibility(View.GONE);
+                mBinding.llBottomSheet.bottomSheetNotAble.setVisibility(View.VISIBLE);
+
+            }
+        });
+
         mBinding.llBottomSheet.llTakeOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 callRunTimePermissions();
+            }
+        });
+
+        mBinding.llBottomSheet.llTakePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callRunTimePermissions();
+
+            }
+        });
+
+        mBinding.llBottomSheet.llCancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              onBackPressed();
+
             }
         });
     }

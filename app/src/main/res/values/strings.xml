@@ -508,6 +508,9 @@
     <string name="gps_popup">GPS is disabled in your device. Would you like to enable it?</string>
     <string name="gps_go_setting">Goto Settings Page To Enable GPS</string>
     <string name="need_kyc">You need to do KYC for this customer</string>
+    <string name="map_not_found">Please try to fnd the Shop using Address/Direction or ask
+nearby kirana people for shop name and address, If not found
+please take photo of area where shop address is mentioned</string>
 
     <string name="need_kyc_one">You need to do KYC after </string>
     <string name="need_kyc_two">order</string>
