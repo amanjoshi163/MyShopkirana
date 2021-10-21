@@ -5,7 +5,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,7 +41,7 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         clusterLatLngList = (ArrayList<ClusterLatLngModel>) getIntent().getSerializableExtra("mylist");
-         mBinding.toolbar.title.setText("Map View");
+        mBinding.toolbar.title.setText("Map View");
         mBinding.toolbar.back.setVisibility(View.VISIBLE);
         mBinding.toolbar.back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,7 +72,7 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
 
     private void setMarkerdata(ArrayList<ClusterLatLngModel> cList) {
 
-ArrayList<LatLng> latLngList=new ArrayList<>();
+        ArrayList<LatLng> latLngList = new ArrayList<>();
         for (int k = 0; k < cList.size(); k++) {
 
             if (!TextUtils.isNullOrEmpty(String.valueOf(cList.get(k).getLat()))) {
@@ -107,7 +106,6 @@ ArrayList<LatLng> latLngList=new ArrayList<>();
                 .strokeColor(Color.RED)
                 .fillColor(getResources().getColor(R.color.trans))
                 .addAll(latLngList));
-
 
 
     }

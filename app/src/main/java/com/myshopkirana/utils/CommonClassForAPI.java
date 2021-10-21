@@ -201,14 +201,14 @@ public class CommonClassForAPI {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(disposable -> Utils.showProgressDialog(mActivity))
-                .subscribe(new Observer<JsonObject>() {
+                .subscribe(new Observer<Boolean>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(JsonObject object) {
+                    public void onNext(Boolean object) {
                         fetchProductDes.onNext(object);
                     }
 

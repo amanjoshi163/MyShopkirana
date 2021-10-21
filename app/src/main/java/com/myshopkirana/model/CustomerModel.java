@@ -34,18 +34,18 @@ public class CustomerModel implements Serializable {
 
 
     public CustomerModel(int customerId, String skcode, String shopName, String shippingAddress, String landMark, double lat, double lg, String shopFound, String captureImagePath, String newShippingAddress, String newlat, String newlg) {
-        CustomerId = customerId;
-        Skcode = skcode;
-        ShopName = shopName;
-        ShippingAddress = shippingAddress;
-        LandMark = landMark;
+       this.CustomerId = customerId;
+        this.Skcode = skcode;
+        this.ShopName = shopName;
+        this.ShippingAddress = shippingAddress;
+        this.LandMark = landMark;
         this.lat = lat;
         this.lg = lg;
-        ShopFound = shopFound;
-        CaptureImagePath = captureImagePath;
-        NewShippingAddress = newShippingAddress;
-        Newlat = newlat;
-        Newlg = newlg;
+        this.ShopFound = shopFound;
+        this.CaptureImagePath = captureImagePath;
+        this.NewShippingAddress = newShippingAddress;
+        this.Newlat = newlat;
+        this.Newlg = newlg;
     }
 
     public String getShopFound() {

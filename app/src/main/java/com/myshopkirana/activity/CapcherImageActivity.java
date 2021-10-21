@@ -3,6 +3,7 @@ package com.myshopkirana.activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,23 +18,29 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.myshopkirana.BuildConfig;
 import com.myshopkirana.R;
 import com.myshopkirana.databinding.ActivityCapcherImageBinding;
 import com.myshopkirana.model.CustomerModel;
 import com.myshopkirana.model.ImageResponse;
 import com.myshopkirana.utils.CommonClassForAPI;
+import com.myshopkirana.utils.GPSTracker;
 import com.myshopkirana.utils.Utils;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
+import id.zelory.compressor.Compressor;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -45,6 +52,11 @@ public class CapcherImageActivity extends AppCompatActivity {
     private CommonClassForAPI commonClassForAPI;
     private String fProfile = "";
     private String uploadFilePath;
+    GPSTracker gpsTracker;
+    Geocoder geocoder;
+    String localAdress,landmarkArea;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,13 +66,29 @@ public class CapcherImageActivity extends AppCompatActivity {
         initView();
     }
 
+
+
     private void initView() {
         utils = new Utils(this);
         commonClassForAPI = CommonClassForAPI.getInstance(this);
+        geocoder = new Geocoder(this, Locale.getDefault());
+
+        gpsTracker = new GPSTracker(this);
         mBinding.skCode.setText(getString(R.string.sk_code) + ": " + customerModel.getSkcode());
         mBinding.name.setText(getString(R.string.txt_Shop_Name) + ": " + customerModel.getShopName());
         mBinding.txtAddValue.setText(getString(R.string.txt_Shop_Address) + ": " + customerModel.getShippingAddress());
 
+        if (gpsTracker!=null){
+            ;
+          /*  try {
+                addresses = geocoder.getFromLocation(gpsTracker.getLatitude(), gpsTracker.getLongitude(), 1);
+                localAdress = addresses.get(0).getLocality();
+                landmarkArea = addresses.get(0).getSubLocality();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }*/
+            gpsTracker.getLongitude();
+        }
 
         mBinding.toolbar.back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,13 +111,13 @@ public class CapcherImageActivity extends AppCompatActivity {
                     CustomerModel model = new CustomerModel(customerModel.getCustomerId(),
                             customerModel.getSkcode(),
                             customerModel.getShopName(),
-                            customerModel.getShippingAddress(),
-                            customerModel.getLandMark(),
+                            localAdress,
+                            landmarkArea,
                             customerModel.getLat(),
                             customerModel.getLg(),
                             customerModel.getShopFound(),
                             uploadFilePath,customerModel.getNewShippingAddress(),
-                            customerModel.getNewlat(),customerModel.getNewlg());
+                            gpsTracker.getLatitude()+"",gpsTracker.getLongitude()+"");
                     if (utils.isNetworkAvailable()) {
                         if (commonClassForAPI != null) {
                             commonClassForAPI.updateCustomer(updateCustomer,model);
@@ -105,16 +133,15 @@ public class CapcherImageActivity extends AppCompatActivity {
     }
 
     // But item response
-    DisposableObserver<JsonObject> updateCustomer = new DisposableObserver<JsonObject>() {
+    DisposableObserver<Boolean> updateCustomer = new DisposableObserver<Boolean>() {
         @Override
-        public void onNext(JsonObject jsonObject) {
+        public void onNext(Boolean jsonObject) {
             Utils.hideProgressDialog(CapcherImageActivity.this);
-            if (jsonObject!=null){
+            if (jsonObject){
                 startActivity(new Intent(CapcherImageActivity.this,HomeActivity.class));
                 finish();
             }
         }
-
         @Override
         public void onError(Throwable e) {
             Utils.hideProgressDialog(CapcherImageActivity.this);
@@ -129,7 +156,7 @@ public class CapcherImageActivity extends AppCompatActivity {
 
 
     private void chooseImage(Context context) {
-        final CharSequence[] optionsMenu = {"Take Photo", "Choose from Gallery", "Exit"}; // create a menuOption Array
+        final CharSequence[] optionsMenu = {"Take Photo","Exit"}; // create a menuOption Array
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setItems(optionsMenu, new DialogInterface.OnClickListener() {
             @Override
@@ -195,6 +222,26 @@ public class CapcherImageActivity extends AppCompatActivity {
 
     private void uploadMultipart() {
         final File fileToUpload = new File(uploadFilePath);
+        new Compressor(this)
+                .compressToFileAsFlowable(fileToUpload)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<File>() {
+                    @Override
+                    public void accept(File file) {
+                        File compressedImage = file;
+
+                        uploadImagePath(compressedImage);
+                        //mBinding.scroll.fullScroll(View.FOCUS_DOWN);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) {
+                        throwable.printStackTrace();
+                       /// Toast.makeText(CustomerSignActivity.this, "" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
         uploadImagePath(fileToUpload);
     }
 

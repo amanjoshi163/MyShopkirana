@@ -2,10 +2,8 @@ package com.myshopkirana.activity;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -14,19 +12,14 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -39,41 +32,26 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.myshopkirana.BuildConfig;
 import com.myshopkirana.R;
 import com.myshopkirana.databinding.ActivityCustomerDetailBinding;
 import com.myshopkirana.model.CustomerModel;
-import com.myshopkirana.model.ImageResponse;
-import com.myshopkirana.utils.CommonClassForAPI;
 import com.myshopkirana.utils.DirectionsJSONParser;
 import com.myshopkirana.utils.GPSTracker;
-import com.myshopkirana.utils.Utils;
 import com.nabinbhandari.android.permissions.PermissionHandler;
 import com.nabinbhandari.android.permissions.Permissions;
 
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 
 public class CustomerDetailActivity extends AppCompatActivity implements OnMapReadyCallback {
     GoogleMap googleMapMain;
@@ -84,9 +62,6 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
     private GPSTracker gpsTracker;
     private ArrayList<LatLng> points = new ArrayList<>();
 
-    private Utils utils;
-    private CommonClassForAPI commonClassForAPI;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,15 +70,13 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map_route);
         mapFragment.getMapAsync(this);
-        gpsTracker = new GPSTracker(this);
-        utils = new Utils(this);
-        commonClassForAPI = CommonClassForAPI.getInstance(this);
+        gpsTracker=new GPSTracker(this);
 
         customerModel = (CustomerModel) getIntent().getSerializableExtra("model");
         if (customerModel != null) {
-            mBinding.llBottomSheet.name.setText("Name :" + customerModel.getShopName());
-            mBinding.llBottomSheet.skCode.setText("Sk Code :" + customerModel.getSkcode());
-            mBinding.llBottomSheet.txtAddValue.setText("Address :" + customerModel.getShippingAddress());
+            mBinding.llBottomSheet.name.setText("Name : " + customerModel.getShopName());
+            mBinding.llBottomSheet.skCode.setText("Sk Code : " + customerModel.getSkcode());
+            mBinding.llBottomSheet.txtAddValue.setText("Address : " + customerModel.getShippingAddress());
             mBinding.toolbar.title.setText(customerModel.getSkcode());
         }
 
@@ -113,6 +86,17 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
                 onBackPressed();
             }
         });
+        mBinding.llBottomSheet.llmap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String strUri = "http://maps.google.com/maps?q=loc:" + customerModel.getLat() + "," + customerModel.getLg() + " (" + customerModel.getShippingAddress() + ")";
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(strUri));
+                    intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+                    startActivity(intent);
+
+            }
+        });
+
         mBinding.llBottomSheet.llTakeOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,10 +111,7 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
             @Override
             public void onGranted() {
                 Log.e("onDenied", "onGranted");
-
-                startActivity(new Intent(CustomerDetailActivity.this, CapcherImageActivity.class).putExtra("model", customerModel));
-
-
+                startActivity(new Intent(CustomerDetailActivity.this,CapcherImageActivity.class).putExtra("model",customerModel));
             }
 
             @Override
@@ -146,6 +127,7 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         googleMapMain = googleMap;
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -154,14 +136,19 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
+
+            googleMap.getUiSettings().setZoomControlsEnabled(true);
+            googleMap.getUiSettings().setCompassEnabled(true);
+            googleMap.getUiSettings().setMapToolbarEnabled(true);
             return;
         }
+
+
 
         cLatLng = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
         destLatLng = new LatLng(customerModel.getLat(), customerModel.getLg());
         drawRoute(cLatLng, destLatLng);
     }
-
     public static Bitmap scaleBitmap(Bitmap bitmap, int newWidth, int newHeight, String skcode) {
         Bitmap scaledBitmap = Bitmap.createBitmap(newWidth, newHeight, Bitmap.Config.ARGB_8888);
 
@@ -188,7 +175,7 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
 
     private void drawRoute(LatLng origin, LatLng dest) {
 
-        googleMapMain.addMarker(new MarkerOptions()
+         googleMapMain.addMarker(new MarkerOptions()
                 .icon(BitmapDescriptorFactory.defaultMarker())
                 .title("Current Location")
                 .flat(true)
@@ -233,7 +220,7 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
 
         // Building the url to the web service
         String url = "https://maps.googleapis.com/maps/api/directions/json" + "?" + parameters
-                + "&key=" + "AIzaSyAsGm-NzYcUOJa5MutpjNlDtFAuh3r8lUs";
+                + "&key=" + getString(R.string.google_maps_key);
 
         return url;
 
@@ -376,9 +363,10 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
             }
 
 
+
+
         }
     }
-
     void staticPolyLine() {
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         for (LatLng latLng : points) {
@@ -395,6 +383,4 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
         googleMapMain.addPolyline(lineOptions);
 
     }
-
-
 }
