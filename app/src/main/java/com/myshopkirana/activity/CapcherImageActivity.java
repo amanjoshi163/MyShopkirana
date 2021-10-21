@@ -59,8 +59,6 @@ public class CapcherImageActivity extends AppCompatActivity {
     Geocoder geocoder;
     String localAdress,landmarkArea,shopFoundValue,mainURl;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,8 +67,6 @@ public class CapcherImageActivity extends AppCompatActivity {
         shopFoundValue =getIntent().getStringExtra("ShopFound");
         initView();
     }
-
-
 
     private void initView() {
         utils = new Utils(this);
@@ -242,31 +238,6 @@ public class CapcherImageActivity extends AppCompatActivity {
                     }
                 }, throwable -> showError(throwable.getMessage()));
     }
-
-
-
-
-        /*new Compressor(this)
-                .compressToFileAsFlowable(fileToUpload)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<File>() {
-                    @Override
-                    public void accept(File file) {
-                        File compressedImage = file;
-
-                        uploadImagePath(compressedImage);
-                        //mBinding.scroll.fullScroll(View.FOCUS_DOWN);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) {
-                        throwable.printStackTrace();
-                       /// Toast.makeText(CustomerSignActivity.this, "" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-        uploadImagePath(fileToUpload);*/
 
     private void showError(String errorMessage) {
         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
