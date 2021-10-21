@@ -1,6 +1,7 @@
 package com.myshopkirana.activity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -69,9 +71,9 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
 
         customerModel = (CustomerModel) getIntent().getSerializableExtra("model");
         if (customerModel != null) {
-            mBinding.llBottomSheet.name.setText("Name :" + customerModel.getShopName());
-            mBinding.llBottomSheet.skCode.setText("Sk Code :" + customerModel.getSkcode());
-            mBinding.llBottomSheet.txtAddValue.setText("Address :" + customerModel.getShippingAddress());
+            mBinding.llBottomSheet.name.setText("Name : " + customerModel.getShopName());
+            mBinding.llBottomSheet.skCode.setText("Sk Code : " + customerModel.getSkcode());
+            mBinding.llBottomSheet.txtAddValue.setText("Address : " + customerModel.getShippingAddress());
             mBinding.toolbar.title.setText(customerModel.getSkcode());
         }
 
@@ -81,11 +83,22 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
                 onBackPressed();
             }
         });
+        mBinding.llBottomSheet.llmap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String strUri = "http://maps.google.com/maps?q=loc:" + customerModel.getLat() + "," + customerModel.getLg() + " (" + customerModel.getShippingAddress() + ")";
+                    Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(strUri));
+                    intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+                    startActivity(intent);
+
+            }
+        });
     }
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         googleMapMain = googleMap;
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -94,8 +107,14 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
+
+            googleMap.getUiSettings().setZoomControlsEnabled(true);
+            googleMap.getUiSettings().setCompassEnabled(true);
+            googleMap.getUiSettings().setMapToolbarEnabled(true);
             return;
         }
+
+
 
         cLatLng = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
         destLatLng = new LatLng(customerModel.getLat(), customerModel.getLg());
@@ -172,7 +191,7 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
 
         // Building the url to the web service
         String url = "https://maps.googleapis.com/maps/api/directions/json" + "?" + parameters
-                + "&key=" + "AIzaSyAsGm-NzYcUOJa5MutpjNlDtFAuh3r8lUs";
+                + "&key=" + getString(R.string.google_maps_key);
 
         return url;
 

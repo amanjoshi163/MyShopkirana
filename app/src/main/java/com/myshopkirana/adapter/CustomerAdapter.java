@@ -2,6 +2,7 @@ package com.myshopkirana.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,19 +53,18 @@ CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHolder> {
         try {
             CustomerModel model = itemLists.get(i);
             viewHolder.mBinding.skCode.setText(activity.getResources().getString(R.string.sk_code) + ": " + model.getSkcode());
-
-
             viewHolder.mBinding.name.setText(activity.getResources().getString(R.string.txt_Shop_Name)+": " + model.getShopName());
-
-
-
             viewHolder.mBinding.txtAddValue.setText(activity.getResources().getString(R.string.txt_Shop_Address)+": " + model.getShippingAddress());
-
-
             viewHolder.mBinding.llDetail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     activity.startActivity(new Intent(activity, CustomerDetailActivity.class).putExtra("model", model));
+
+//                    String strUri = "http://maps.google.com/maps?q=loc:" + model.getLat() + "," + model.getLg() + " (" + model.getSkcode() + ")";
+//                    Intent intent = new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(strUri));
+//                    intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+//                    activity.startActivity(intent);
+
                 }
             });
 
