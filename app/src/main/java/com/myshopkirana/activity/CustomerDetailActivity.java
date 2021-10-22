@@ -2,6 +2,7 @@ package com.myshopkirana.activity;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -10,16 +11,22 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.location.Address;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -32,26 +39,41 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.myshopkirana.BuildConfig;
 import com.myshopkirana.R;
 import com.myshopkirana.databinding.ActivityCustomerDetailBinding;
 import com.myshopkirana.model.CustomerModel;
+import com.myshopkirana.utils.CommonClassForAPI;
 import com.myshopkirana.utils.DirectionsJSONParser;
 import com.myshopkirana.utils.GPSTracker;
+import com.myshopkirana.utils.Utils;
 import com.nabinbhandari.android.permissions.PermissionHandler;
 import com.nabinbhandari.android.permissions.Permissions;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import id.zelory.compressor.Compressor;
+import io.reactivex.observers.DisposableObserver;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import rx.functions.Action1;
 
 public class CustomerDetailActivity extends AppCompatActivity implements OnMapReadyCallback {
     GoogleMap googleMapMain;
@@ -61,6 +83,11 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
     private PolylineOptions lineOptions;
     private String destLatLng;
     private GPSTracker gpsTracker;
+    private String fProfile = "";
+    private String uploadFilePath;
+    private Utils utils;
+    String shopFound="";
+    private CommonClassForAPI commonClassForAPI;
     private ArrayList<LatLng> points = new ArrayList<>();
 
     @Override
@@ -72,7 +99,8 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
                 .findFragmentById(R.id.map_route);
         mapFragment.getMapAsync(this);
         gpsTracker=new GPSTracker(this);
-
+        commonClassForAPI = CommonClassForAPI.getInstance(this);
+        utils=new Utils(this);
         customerModel = (CustomerModel) getIntent().getSerializableExtra("model");
         if (customerModel != null) {
             mBinding.llBottomSheet.name.setText("Name : " + customerModel.getShopName());
@@ -107,14 +135,14 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
             }
         });
 
-        mBinding.llBottomSheet.llTakeOrder.setOnClickListener(new View.OnClickListener() {
+        mBinding.llBottomSheet.llTakePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 callRunTimePermissions("true");
             }
         });
 
-        mBinding.llBottomSheet.llTakePhoto.setOnClickListener(new View.OnClickListener() {
+        mBinding.llBottomSheet.llTakePhotoNotAble.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 callRunTimePermissions("false");
@@ -132,15 +160,17 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
         });
     }
 
-    public void callRunTimePermissions(String shopFound) {
+    public void callRunTimePermissions(String shop) {
 
         String[] permissions = {Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE};
         Permissions.check(CustomerDetailActivity.this/*context*/, permissions, null/*rationale*/, null/*options*/, new PermissionHandler() {
             @Override
             public void onGranted() {
                 Log.e("onDenied", "onGranted");
-                startActivity(new Intent(CustomerDetailActivity.this,CapcherImageActivity.class).
-                        putExtra("model",customerModel).putExtra("ShopFound",shopFound));
+//                startActivity(new Intent(CustomerDetailActivity.this,CapcherImageActivity.class).
+//                        putExtra("model",customerModel).putExtra("ShopFound",shopFound));
+                shopFound=shop;
+                chooseImage(CustomerDetailActivity.this);
             }
 
             @Override
@@ -153,6 +183,46 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
         });
     }
 
+    private void chooseImage(Context context) {
+        final CharSequence[] optionsMenu = {"Take Photo", "Exit"}; // create a menuOption Array
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setItems(optionsMenu, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (optionsMenu[i].equals("Take Photo")) {
+                    Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    if (pictureIntent.resolveActivity(context.getPackageManager()) != null) {
+                        File photoFile;
+                        photoFile = createImageFile();
+                        Uri photoUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", photoFile);
+                        pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                    }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        pictureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    }
+                    startActivityForResult(pictureIntent, 0);
+                } else if (optionsMenu[i].equals("Exit")) {
+                    dialogInterface.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
+
+    private File createImageFile() {
+        File storageDir = this.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File file = new File(Environment.getExternalStorageDirectory() + "/ShopKirana");
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        fProfile = "photo_" + timeStamp + "_";
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        file = new File(storageDir, fProfile);
+        uploadFilePath = file.getAbsolutePath();
+
+        return file;
+    }
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         googleMapMain = googleMap;
@@ -413,4 +483,96 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
         googleMapMain.addPolyline(lineOptions);
 
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_CANCELED) {
+            switch (requestCode) {
+                case 0:
+                    Uri selectedImage = Uri.parse(uploadFilePath);
+                  //  mBinding.ivShop.setImageURI(selectedImage);
+                    if (utils.isNetworkAvailable()) {
+                        uploadMultipart();
+                    } else {
+                        Utils.setToast(this, "No Internet Connection");
+                    }
+                    Log.e("Bhagwan ", "" + selectedImage.toString());
+
+                    break;
+                case 1:
+                    if (resultCode == RESULT_OK && data != null) {
+
+                    }
+                    break;
+            }
+        }
+    }
+
+    private void uploadMultipart() {
+        final File fileToUpload = new File(uploadFilePath);
+
+        //uploadImagePath(fileToUpload);
+        Compressor.getDefault(this)
+                .compressToFileAsObservable(fileToUpload)
+                ///.subscribeOn(Schedulers.io())
+                ///.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<File>() {
+                    @Override
+                    public void call(File file) {
+                        ///compressedImage = file;
+                        uploadImagePath(file);
+                    }
+                }, throwable -> showError(throwable.getMessage()));
+    }
+
+    private void showError(String errorMessage) {
+        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (imageObserver!=null){
+            imageObserver.dispose();
+        }
+    }
+
+    private void uploadImagePath(File file) {
+        RequestBody requestFile =
+                RequestBody.create(MediaType.parse("image/jpeg"), file);
+        MultipartBody.Part body =
+                MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+        Utils.showProgressDialog(this);
+        commonClassForAPI.uploadImage(imageObserver, body);
+    }
+    private final DisposableObserver<String> imageObserver = new DisposableObserver<String>() {
+        @Override
+        public void onNext(@NotNull String response) {
+            try {
+
+
+                if (response != null) {
+                  String  mainURl = BuildConfig.apiEndpoint + response;
+                    startActivity(new Intent(CustomerDetailActivity.this,CapcherImageActivity.class).
+                        putExtra("model",customerModel).putExtra("ShopFound",shopFound).putExtra("imageurl",mainURl));
+                    Log.e("DaysBeatList_model", mainURl);
+                } else {
+                    Toast.makeText(CustomerDetailActivity.this, "Image Not Uploaded", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            e.printStackTrace();
+            Utils.hideProgressDialog(CustomerDetailActivity.this);
+        }
+
+        @Override
+        public void onComplete() {
+            Utils.hideProgressDialog(CustomerDetailActivity.this);
+        }
+    };
 }

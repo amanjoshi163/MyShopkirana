@@ -116,7 +116,7 @@
 
 
                     <LinearLayout
-                        android:id="@+id/ll_take_order"
+                        android:id="@+id/ll_take_photo"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/size40"
 
@@ -207,7 +207,7 @@
 
 
                     <LinearLayout
-                        android:id="@+id/ll_take_photo"
+                        android:id="@+id/ll_take_photo_not_able"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/size40"
                         android:layout_weight="1"

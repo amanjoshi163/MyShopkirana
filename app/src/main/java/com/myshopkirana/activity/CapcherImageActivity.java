@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 
+import com.bumptech.glide.Glide;
 import com.myshopkirana.BuildConfig;
 import com.myshopkirana.R;
 import com.myshopkirana.databinding.ActivityCapcherImageBinding;
@@ -54,32 +55,7 @@ public class CapcherImageActivity extends AppCompatActivity {
         public void onNext(@NotNull String response) {
             try {
 
-                gpsTracker = new GPSTracker(CapcherImageActivity.this);
-                List<Address> addresses;
-
-
-                addresses = geocoder.getFromLocation(gpsTracker.getLatitude(), gpsTracker.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-
-                String address = "" + addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                String city = "" + addresses.get(0).getLocality();
-                String state = "" + addresses.get(0).getAdminArea();
-                String country = "" + addresses.get(0).getCountryName();
-                String postalCode = "" + addresses.get(0).getPostalCode();
-                String knownName = "" + addresses.get(0).getFeatureName();
-                fullAddress = address + "," + city + "," + postalCode + "," + state + "," + knownName + "," + country;
-                mBinding.txtAddress.setVisibility(View.VISIBLE);
-                mBinding.txtAddress.setText("Current Address :" + fullAddress);
-                Date c = Calendar.getInstance().getTime();
-
-
-                Calendar calendar = Calendar.getInstance();
-                SimpleDateFormat mdformat = new SimpleDateFormat("hh:mm aaa");
-                String strDate = "" + mdformat.format(calendar.getTime());
-
-                SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
-                String formattedDate = df.format(c);
-                mBinding.txtTime.setText("Time : " + strDate + " Date : " + formattedDate);
-                mBinding.txtTime.setVisibility(View.VISIBLE);
+                calltimeandAddress();
                 Utils.hideProgressDialog(CapcherImageActivity.this);
                 if (response != null) {
                     mainURl = BuildConfig.apiEndpoint + response;
@@ -133,12 +109,55 @@ public class CapcherImageActivity extends AppCompatActivity {
     private String fProfile = "";
     private String uploadFilePath;
 
+    private void calltimeandAddress() {
+        try {
+
+
+            gpsTracker = new GPSTracker(CapcherImageActivity.this);
+            List<Address> addresses;
+
+
+            addresses = geocoder.getFromLocation(gpsTracker.getLatitude(), gpsTracker.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+
+            String address = "" + addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+            String city = "" + addresses.get(0).getLocality();
+            String state = "" + addresses.get(0).getAdminArea();
+            String country = "" + addresses.get(0).getCountryName();
+            String postalCode = "" + addresses.get(0).getPostalCode();
+            String knownName = "" + addresses.get(0).getFeatureName();
+            fullAddress = address + "," + city + "," + postalCode + "," + state + "," + knownName + "," + country;
+            mBinding.txtAddress.setVisibility(View.VISIBLE);
+            mBinding.txtAddress.setText("Current Address :" + fullAddress);
+            Date c = Calendar.getInstance().getTime();
+
+
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat mdformat = new SimpleDateFormat("hh:mm aaa");
+            String strDate = "" + mdformat.format(calendar.getTime());
+
+            SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+            String formattedDate = df.format(c);
+            String timeate = "Time : " + strDate + " Date : " + formattedDate;
+            String device = "Device : " + Utils.getDeviceName();
+            String s = timeate
+                    + System.getProperty("line.separator")
+                    + device
+                    + System.getProperty("line.separator");
+
+            mBinding.txtTime.setText(s);
+            mBinding.txtTime.setVisibility(View.VISIBLE);
+        } catch (Exception e) {
+
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_capcher_image);
         customerModel = (CustomerModel) getIntent().getSerializableExtra("model");
         shopFoundValue = getIntent().getStringExtra("ShopFound");
+        mainURl = getIntent().getStringExtra("imageurl");
 
         initView();
     }
@@ -160,6 +179,12 @@ public class CapcherImageActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+        if (mainURl != null) {
+            calltimeandAddress();
+            Glide.with(CapcherImageActivity.this)
+                    .load(mainURl)
+                    .into(mBinding.ivShop);
+        }
 
         if (shopFoundValue.equals("false")) {
             mBinding.txtTakepic.setText("Not Able To Track");
@@ -176,7 +201,7 @@ public class CapcherImageActivity extends AppCompatActivity {
         mBinding.btSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (uploadFilePath == null) {
+                if (mainURl == null) {
                     Utils.setToast(getApplicationContext(), "Please Upload Shop Image");
                 } else if (shopFoundValue.equals("false")) {
                     if (!mBinding.cbShopNotFound.isChecked()) {
@@ -197,14 +222,15 @@ public class CapcherImageActivity extends AppCompatActivity {
     }
 
     private void callApi() {
-        if (customerModel.getLandMark()!=null){
-        landmarkArea= customerModel.getLandMark();}else {
-            landmarkArea= "";
+        if (customerModel.getLandMark() != null) {
+            landmarkArea = customerModel.getLandMark();
+        } else {
+            landmarkArea = "";
         }
-        if (customerModel.getShippingAddress()!=null){
-            localAdress=customerModel.getShippingAddress();
-        }else {
-            localAdress="";
+        if (customerModel.getShippingAddress() != null) {
+            localAdress = customerModel.getShippingAddress();
+        } else {
+            localAdress = "";
         }
 
         CustomerModel model = new CustomerModel(customerModel.getCustomerId(),

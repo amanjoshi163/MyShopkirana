@@ -11,6 +11,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -75,7 +76,6 @@ public class HomeActivity extends AppCompatActivity {
     GPSTracker gpsTracker;
     Geocoder geocoder;
     String cityName="";
-    private int cityid=0;
     private final DisposableObserver<ArrayList<CityModel>> objCity = new DisposableObserver<ArrayList<CityModel>>() {
 
         @Override
@@ -91,6 +91,7 @@ public class HomeActivity extends AppCompatActivity {
                 CityAdapter adapter = new CityAdapter(HomeActivity.this,
                         R.layout.listitems_layout, R.id.cityname, cMainList);
                 mBinding.spnCity.setAdapter(adapter);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -156,7 +157,16 @@ public class HomeActivity extends AppCompatActivity {
         inits();
 
     }
+    private int getIndex(Spinner spinner, String myString){
+        for (int i=0;i<spinner.getCount();i++){
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)){
+                return i;
 
+            }
+        }
+
+        return 0;
+    }
     public void callRunTimePermissions() {
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA};
         Permissions.check(HomeActivity.this/*context*/, permissions, null/*rationale*/, null/*options*/, new PermissionHandler() {
@@ -206,7 +216,8 @@ public class HomeActivity extends AppCompatActivity {
 
         mBinding.spnCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                              
+
+                int cityid = cMainList.get(pos).getCityid();
 
                 Utils.showProgressDialog(HomeActivity.this);
                 callClusterApi(cityid);
