@@ -43,6 +43,7 @@ import io.reactivex.observers.DisposableObserver;
 public class HomeActivity extends AppCompatActivity {
     CustomerAdapter customerAdapter;
     ArrayList<CustomerModel> custMainList;
+    List<Address> addresses;
     private final DisposableObserver<ArrayList<CustomerModel>> objcutomer = new DisposableObserver<ArrayList<CustomerModel>>() {
 
         @Override
@@ -91,6 +92,24 @@ public class HomeActivity extends AppCompatActivity {
                 CityAdapter adapter = new CityAdapter(HomeActivity.this,
                         R.layout.listitems_layout, R.id.cityname, cMainList);
                 mBinding.spnCity.setAdapter(adapter);
+
+                try {
+                    addresses = geocoder.getFromLocation(gpsTracker.getLatitude(), gpsTracker.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+                    cityName = "" + addresses.get(0).getLocality();
+                    System.out.println(cityName);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                int pos = 0;
+                for (int i = 0; i <cMainList.size() ; i++) {
+                    if(!cityName.isEmpty()){
+                        if(cityName.toLowerCase()==cMainList.get(i).getCityName().toLowerCase())
+                        {
+                            pos = i;
+                        }
+                    }
+                }
+                mBinding.spnCity.setSelection(pos);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -191,15 +210,10 @@ public class HomeActivity extends AppCompatActivity {
 
 
         gpsTracker = new GPSTracker(HomeActivity.this);
-        List<Address> addresses;
+       
 
 
-        try {
-            addresses = geocoder.getFromLocation(gpsTracker.getLatitude(), gpsTracker.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-            cityName = "" + addresses.get(0).getLocality();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        
         // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
 
 
