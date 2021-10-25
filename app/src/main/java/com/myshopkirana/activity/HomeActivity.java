@@ -44,7 +44,6 @@ import io.reactivex.observers.DisposableObserver;
 public class HomeActivity extends AppCompatActivity {
     CustomerAdapter customerAdapter;
     ArrayList<CustomerModel> custMainList;
-    List<Address> addresses;
     private final DisposableObserver<ArrayList<CustomerModel>> objcutomer = new DisposableObserver<ArrayList<CustomerModel>>() {
 
         @Override
@@ -71,12 +70,13 @@ public class HomeActivity extends AppCompatActivity {
 
         }
     };
+    List<Address> addresses;
+    GPSTracker gpsTracker;
+    Geocoder geocoder;
+    String cityName = "";
     private Utils utils;
     private ActivityHomeBinding mBinding;
     private ArrayList<CityModel> cMainList;
-    GPSTracker gpsTracker;
-    Geocoder geocoder;
-    String cityName="";
     private final DisposableObserver<ArrayList<CityModel>> objCity = new DisposableObserver<ArrayList<CityModel>>() {
 
         @Override
@@ -102,16 +102,19 @@ public class HomeActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 int pos = 0;
-                for (int i = 0; i <cMainList.size() ; i++) {
-                    if(!cityName.isEmpty()){
-                        if(cityName.equalsIgnoreCase(cMainList.get(i).getCityName().toLowerCase()))
-                        {
+                boolean b = false;
+                for (int i = 0; i < cMainList.size(); i++) {
+                    if (!cityName.isEmpty()) {
+                        if (cityName.equalsIgnoreCase(cMainList.get(i).getCityName().toLowerCase())) {
+                            b = true;
                             pos = i;
+                            break;
                         }
                     }
                 }
-                mBinding.spnCity.setSelection(pos);
-
+                if (b) {
+                    mBinding.spnCity.setSelection(pos);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -177,22 +180,15 @@ public class HomeActivity extends AppCompatActivity {
         inits();
 
     }
-    private int getIndex(Spinner spinner, String myString){
-        for (int i=0;i<spinner.getCount();i++){
-            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)){
-                return i;
 
-            }
-        }
 
-        return 0;
-    }
     public void callRunTimePermissions() {
-        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA};
+        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
         Permissions.check(HomeActivity.this/*context*/, permissions, null/*rationale*/, null/*options*/, new PermissionHandler() {
             @Override
             public void onGranted() {
                 Log.e("onDenied", "onGranted");
+
             }
 
             @Override
@@ -209,7 +205,7 @@ public class HomeActivity extends AppCompatActivity {
         clusterLatLngList = new ArrayList<>();
         commonClassForAPI = CommonClassForAPI.getInstance(this);
         cMainList = new ArrayList<>();
-        gpsTracker=new GPSTracker(this);
+        gpsTracker = new GPSTracker(this);
         geocoder = new Geocoder(this, Locale.getDefault());
         clusterList = new ArrayList<>();
         custMainList = new ArrayList<>();
@@ -221,12 +217,9 @@ public class HomeActivity extends AppCompatActivity {
 
 
         gpsTracker = new GPSTracker(HomeActivity.this);
-       
 
 
-        
         // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-
 
 
         mBinding.spnCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

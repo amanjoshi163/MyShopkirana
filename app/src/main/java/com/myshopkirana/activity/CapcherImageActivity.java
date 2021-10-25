@@ -3,6 +3,9 @@ package com.myshopkirana.activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -27,10 +30,14 @@ import com.myshopkirana.model.CustomerModel;
 import com.myshopkirana.utils.CommonClassForAPI;
 import com.myshopkirana.utils.GPSTracker;
 import com.myshopkirana.utils.Utils;
+import com.watermark.androidwm_light.WatermarkBuilder;
+import com.watermark.androidwm_light.bean.WatermarkText;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -128,24 +135,24 @@ public class CapcherImageActivity extends AppCompatActivity {
             fullAddress = address + "," + city + "," + postalCode + "," + state + "," + knownName + "," + country;
             mBinding.txtAddress.setVisibility(View.VISIBLE);
             mBinding.txtAddress.setText("Current Address :" + fullAddress);
-            Date c = Calendar.getInstance().getTime();
 
-
-            Calendar calendar = Calendar.getInstance();
-            SimpleDateFormat mdformat = new SimpleDateFormat("hh:mm aaa");
-            String strDate = "" + mdformat.format(calendar.getTime());
-
-            SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
-            String formattedDate = df.format(c);
-            String timeate = "Time : " + strDate + " Date : " + formattedDate;
-            String device = "Device : " + Utils.getDeviceName();
-            String s = timeate
-                    + System.getProperty("line.separator")
-                    + device
-                    + System.getProperty("line.separator");
-
-            mBinding.txtTime.setText(s);
-            mBinding.txtTime.setVisibility(View.VISIBLE);
+//
+//            Date c = Calendar.getInstance().getTime();
+//            Calendar calendar = Calendar.getInstance();
+//            SimpleDateFormat mdformat = new SimpleDateFormat("hh:mm aaa");
+//            String strDate = "" + mdformat.format(calendar.getTime());
+//
+//            SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+//            String formattedDate = df.format(c);
+//            String timeate = "Time : " + strDate + " Date : " + formattedDate;
+//            String device = "Device : " + Utils.getDeviceName();
+//            String s = timeate
+//                    + System.getProperty("line.separator")
+//                    + device
+//                    + System.getProperty("line.separator");
+//
+//            mBinding.txtTime.setText(s);
+//            mBinding.txtTime.setVisibility(View.VISIBLE);
         } catch (Exception e) {
 
         }
@@ -198,6 +205,18 @@ public class CapcherImageActivity extends AppCompatActivity {
                 chooseImage(CapcherImageActivity.this);
             }
         });
+        mBinding.ivShop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (mainURl != null) {
+                    Intent intent = new Intent(CapcherImageActivity.this, ZoomImageActivity.class);
+                    intent.putExtra("imageurl", mainURl);
+                    startActivity(intent);
+                }
+            }
+        });
+
         mBinding.btSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -293,21 +312,86 @@ public class CapcherImageActivity extends AppCompatActivity {
         return file;
     }
 
+    //    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (resultCode != RESULT_CANCELED) {
+//            switch (requestCode) {
+//                case 0:
+//                    Uri selectedImage = Uri.parse(uploadFilePath);
+//
+//
+//                    mBinding.ivShop.setImageURI(selectedImage);
+//                    if (utils.isNetworkAvailable()) {
+//                        uploadMultipart();
+//                    } else {
+//                        Utils.setToast(this, "No Internet Connection");
+//                    }
+//                    Log.e("Bhagwan ", "" + selectedImage.toString());
+//
+//                    break;
+//                case 1:
+//                    if (resultCode == RESULT_OK && data != null) {
+//
+//                    }
+//                    break;
+//            }
+//        }
+//    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != RESULT_CANCELED) {
             switch (requestCode) {
                 case 0:
-                    Uri selectedImage = Uri.parse(uploadFilePath);
-                    mBinding.ivShop.setImageURI(selectedImage);
+                    Uri selectedImage = Uri.fromFile(new File(uploadFilePath));
+                    try {
+                        Date c = Calendar.getInstance().getTime();
+                        Calendar calendar = Calendar.getInstance();
+                        SimpleDateFormat mdformat = new SimpleDateFormat("hh:mm aaa");
+                        String strDate = "" + mdformat.format(calendar.getTime());
+
+                        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+                        String formattedDate = df.format(c);
+                        String timeate = "Time : " + strDate + " Date : " + formattedDate;
+                        String device = "Device : " + Utils.getDeviceName();
+                        String s = timeate
+                                + System.getProperty("line.separator")
+                                + device
+                                + System.getProperty("line.separator");
+
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
+                        WatermarkText watermarkText = new WatermarkText(s)
+                                .setPositionX(0.1)
+                                .setPositionY(0.1)
+                                .setTextColor(getResources().getColor(R.color.status_orange))
+                                .setTextShadow(0.1f, 5, 5, Color.BLACK)
+                                .setTextFont(R.font.segoeuib)
+                                .setTextAlpha(150)
+                                .setRotation(0)
+                                .setTextSize(50);
+                        WatermarkBuilder
+                                .create(this, bitmap)
+                                .loadWatermarkText(watermarkText) // use .loadWatermarkImage(watermarkImage) to load an image.
+                                .getWatermark()
+                                .setToImageView(mBinding.ivShop);
+                        BitmapDrawable drawable = (BitmapDrawable) mBinding.ivShop.getDrawable();
+                        Bitmap watermarkBitmap = drawable.getBitmap();
+                        try (FileOutputStream out = new FileOutputStream(uploadFilePath)) {
+                            watermarkBitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                     if (utils.isNetworkAvailable()) {
                         uploadMultipart();
                     } else {
                         Utils.setToast(this, "No Internet Connection");
                     }
                     Log.e("Bhagwan ", "" + selectedImage.toString());
-
                     break;
                 case 1:
                     if (resultCode == RESULT_OK && data != null) {

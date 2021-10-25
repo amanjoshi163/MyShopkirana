@@ -11,7 +11,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.fonts.Font;
 import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -49,12 +52,15 @@ import com.myshopkirana.utils.GPSTracker;
 import com.myshopkirana.utils.Utils;
 import com.nabinbhandari.android.permissions.PermissionHandler;
 import com.nabinbhandari.android.permissions.Permissions;
+import com.watermark.androidwm_light.WatermarkBuilder;
+import com.watermark.androidwm_light.bean.WatermarkText;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -77,8 +83,39 @@ import rx.functions.Action1;
 
 public class CustomerDetailActivity extends AppCompatActivity implements OnMapReadyCallback {
     GoogleMap googleMapMain;
+    String shopFound = "";
     private ActivityCustomerDetailBinding mBinding;
     private CustomerModel customerModel;
+    private final DisposableObserver<String> imageObserver = new DisposableObserver<String>() {
+        @Override
+        public void onNext(@NotNull String response) {
+            try {
+
+
+                if (response != null) {
+                    String mainURl = BuildConfig.apiEndpoint + response;
+                    startActivity(new Intent(CustomerDetailActivity.this, CapcherImageActivity.class).
+                            putExtra("model", customerModel).putExtra("ShopFound", shopFound).putExtra("imageurl", mainURl));
+                    Log.e("DaysBeatList_model", mainURl);
+                } else {
+                    Toast.makeText(CustomerDetailActivity.this, "Image Not Uploaded", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            e.printStackTrace();
+            Utils.hideProgressDialog(CustomerDetailActivity.this);
+        }
+
+        @Override
+        public void onComplete() {
+            Utils.hideProgressDialog(CustomerDetailActivity.this);
+        }
+    };
     private LatLng cLatLng;
     private PolylineOptions lineOptions;
     private String destLatLng;
@@ -86,9 +123,31 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
     private String fProfile = "";
     private String uploadFilePath;
     private Utils utils;
-    String shopFound="";
     private CommonClassForAPI commonClassForAPI;
     private ArrayList<LatLng> points = new ArrayList<>();
+
+    public static Bitmap scaleBitmap(Bitmap bitmap, int newWidth, int newHeight, String skcode) {
+        Bitmap scaledBitmap = Bitmap.createBitmap(newWidth, newHeight, Bitmap.Config.ARGB_8888);
+
+        float scaleX = newWidth / (float) bitmap.getWidth();
+        float scaleY = newHeight / (float) bitmap.getHeight();
+        float pivotX = 0;
+        float pivotY = 0;
+
+        Matrix scaleMatrix = new Matrix();
+        scaleMatrix.setScale(scaleX, scaleY, pivotX, pivotY);
+
+        Canvas canvas = new Canvas(scaledBitmap);
+        canvas.setMatrix(scaleMatrix);
+        canvas.drawBitmap(bitmap, 0, 0, new Paint(Paint.FILTER_BITMAP_FLAG));
+
+        Paint color = new Paint();
+        color.setTextSize(20);
+        color.setColor(Color.WHITE);
+        canvas.drawText(skcode, 30, 40, color);
+
+        return scaledBitmap;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,9 +157,9 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map_route);
         mapFragment.getMapAsync(this);
-        gpsTracker=new GPSTracker(this);
+        gpsTracker = new GPSTracker(this);
         commonClassForAPI = CommonClassForAPI.getInstance(this);
-        utils=new Utils(this);
+        utils = new Utils(this);
         customerModel = (CustomerModel) getIntent().getSerializableExtra("model");
         if (customerModel != null) {
             mBinding.llBottomSheet.name.setText("Name : " + customerModel.getShopName());
@@ -118,10 +177,10 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
         mBinding.llBottomSheet.llmap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 String strUri = "http://maps.google.co.in/maps?q=" + customerModel.getShippingAddress() + " (" + customerModel.getShippingAddress() + ")";
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(strUri));
-                    intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-                    startActivity(intent);
+                String strUri = "http://maps.google.co.in/maps?q=" + customerModel.getShippingAddress() + " (" + customerModel.getShippingAddress() + ")";
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(strUri));
+                intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
+                startActivity(intent);
 
             }
         });
@@ -162,14 +221,14 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
 
     public void callRunTimePermissions(String shop) {
 
-        String[] permissions = {Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        String[] permissions = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         Permissions.check(CustomerDetailActivity.this/*context*/, permissions, null/*rationale*/, null/*options*/, new PermissionHandler() {
             @Override
             public void onGranted() {
                 Log.e("onDenied", "onGranted");
 //                startActivity(new Intent(CustomerDetailActivity.this,CapcherImageActivity.class).
 //                        putExtra("model",customerModel).putExtra("ShopFound",shopFound));
-                shopFound=shop;
+                shopFound = shop;
                 chooseImage(CustomerDetailActivity.this);
             }
 
@@ -209,7 +268,6 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
         builder.show();
     }
 
-
     private File createImageFile() {
         File storageDir = this.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File file = new File(Environment.getExternalStorageDirectory() + "/ShopKirana");
@@ -223,6 +281,7 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
 
         return file;
     }
+
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         googleMapMain = googleMap;
@@ -243,53 +302,31 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
         }
 
 
-
         cLatLng = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
 //        destLatLng = new LatLng(customerModel.getLat(), customerModel.getLg());
-        destLatLng =  customerModel.getShippingAddress();
-        drawRoute(cLatLng, destLatLng,customerModel);
+        destLatLng = customerModel.getShippingAddress();
+        drawRoute(cLatLng, destLatLng, customerModel);
     }
-    public static Bitmap scaleBitmap(Bitmap bitmap, int newWidth, int newHeight, String skcode) {
-        Bitmap scaledBitmap = Bitmap.createBitmap(newWidth, newHeight, Bitmap.Config.ARGB_8888);
-
-        float scaleX = newWidth / (float) bitmap.getWidth();
-        float scaleY = newHeight / (float) bitmap.getHeight();
-        float pivotX = 0;
-        float pivotY = 0;
-
-        Matrix scaleMatrix = new Matrix();
-        scaleMatrix.setScale(scaleX, scaleY, pivotX, pivotY);
-
-        Canvas canvas = new Canvas(scaledBitmap);
-        canvas.setMatrix(scaleMatrix);
-        canvas.drawBitmap(bitmap, 0, 0, new Paint(Paint.FILTER_BITMAP_FLAG));
-
-        Paint color = new Paint();
-        color.setTextSize(20);
-        color.setColor(Color.WHITE);
-        canvas.drawText(skcode, 30, 40, color);
-
-        return scaledBitmap;
-    }
-
 
     private void drawRoute(LatLng origin, String dest, CustomerModel customerModel) {
 
-         googleMapMain.addMarker(new MarkerOptions()
+        googleMapMain.addMarker(new MarkerOptions()
                 .icon(BitmapDescriptorFactory.defaultMarker())
                 .title("Current Location")
                 .flat(true)
                 .anchor(0.5f, 0.5f)
                 .position(origin));
 
-        Bitmap markerBitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.green_tag);
-        markerBitmap1 = scaleBitmap(markerBitmap1, 150, 90, this.customerModel.getSkcode());
-        googleMapMain.addMarker(new MarkerOptions()
-                .position(new LatLng(customerModel.getLat(),customerModel.getLg()))
-                .anchor(0.5f, 0.5f)
-                .title(this.customerModel.getSkcode())
-                .icon(BitmapDescriptorFactory.fromBitmap(markerBitmap1)));
-
+        if (customerModel.getLat() != 0.0) {
+            Bitmap markerBitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.green_tag);
+            markerBitmap1 = scaleBitmap(markerBitmap1, 150, 90, this.customerModel.getSkcode());
+            LatLng lt = getLocationFromAddress(this, customerModel.getShippingAddress());
+            googleMapMain.addMarker(new MarkerOptions()
+                    .position(lt)
+                    .anchor(0.5f, 0.5f)
+                    .title(this.customerModel.getSkcode())
+                    .icon(BitmapDescriptorFactory.fromBitmap(markerBitmap1)));
+        }
         String url = getUrl(origin, dest);
 
         FetchUrl FetchUrl = new FetchUrl();
@@ -321,8 +358,32 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
         // Building the url to the web service
         String url = "https://maps.googleapis.com/maps/api/directions/json" + "?" + parameters
                 + "&key=" + getString(R.string.google_maps_key);
+        url = url.replaceAll(" ", "%20");
 
+        Log.e("Map_URL", url);
         return url;
+
+    }
+
+    public LatLng getLocationFromAddress(Context context, String strAddress) {
+        Geocoder coder = new Geocoder(context);
+        List<Address> address;
+        LatLng p1 = null;
+
+        try {
+            address = coder.getFromLocationName(strAddress, 5);
+            if (address == null) {
+                return null;
+            }
+            Address location = address.get(0);
+            location.getLatitude();
+            location.getLongitude();
+
+            p1 = new LatLng(location.getLatitude(), location.getLongitude());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return p1;
 
     }
 
@@ -362,6 +423,123 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
 
         Log.d("data downlaod", data);
         return data;
+    }
+
+    void staticPolyLine() {
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        for (LatLng latLng : points) {
+            builder.include(latLng);
+        }
+        LatLngBounds bounds = builder.build();
+        CameraUpdate mCameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 2);
+        googleMapMain.animateCamera(mCameraUpdate);
+
+        lineOptions = new PolylineOptions();
+        lineOptions.color(Color.BLACK);
+        lineOptions.width(5);
+        lineOptions.addAll(points);
+        googleMapMain.addPolyline(lineOptions);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_CANCELED) {
+            switch (requestCode) {
+                case 0:
+                    Uri selectedImage = Uri.fromFile(new File(uploadFilePath));
+                    try {
+                        Date c = Calendar.getInstance().getTime();
+                        Calendar calendar = Calendar.getInstance();
+                        SimpleDateFormat mdformat = new SimpleDateFormat("hh:mm aaa");
+                        String strDate = "" + mdformat.format(calendar.getTime());
+
+                        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+                        String formattedDate = df.format(c);
+                        String timeate = "Time : " + strDate + " Date : " + formattedDate;
+                        String device = "Device : " + Utils.getDeviceName();
+                        String s = timeate
+                                + System.getProperty("line.separator")
+                                + device
+                                + System.getProperty("line.separator");
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver() , selectedImage);
+                        WatermarkText watermarkText = new WatermarkText(s)
+                                .setPositionX(0.1)
+                                .setPositionY(0.1)
+                                .setTextColor(getResources().getColor(R.color.status_orange))
+                                .setTextShadow(0.1f, 5, 5, Color.BLACK)
+                                .setTextFont(R.font.segoeuib)
+                                .setTextAlpha(150)
+                                .setRotation(0)
+                                .setTextSize(50);
+                        WatermarkBuilder
+                                .create(this, bitmap)
+                                .loadWatermarkText(watermarkText) // use .loadWatermarkImage(watermarkImage) to load an image.
+                                .getWatermark()
+                                .setToImageView(mBinding.llBottomSheet.demoIv);
+                        BitmapDrawable drawable = (BitmapDrawable) mBinding.llBottomSheet.demoIv.getDrawable();
+                        Bitmap watermarkBitmap = drawable.getBitmap();
+                        try (FileOutputStream out = new FileOutputStream(uploadFilePath)) {
+                            watermarkBitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (utils.isNetworkAvailable()) {
+                        uploadMultipart();
+                    } else {
+                        Utils.setToast(this, "No Internet Connection");
+                    }
+                    Log.e("Bhagwan ", "" + selectedImage.toString());
+                    break;
+                case 1:
+                    if (resultCode == RESULT_OK && data != null) {
+
+                    }
+                    break;
+            }
+        }
+    }
+    private void uploadMultipart() {
+        final File fileToUpload = new File(uploadFilePath);
+
+        //uploadImagePath(fileToUpload);
+        Compressor.getDefault(this)
+                .compressToFileAsObservable(fileToUpload)
+                ///.subscribeOn(Schedulers.io())
+                ///.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<File>() {
+                    @Override
+                    public void call(File file) {
+                        ///compressedImage = file;
+                        uploadImagePath(file);
+                    }
+                }, throwable -> showError(throwable.getMessage()));
+    }
+
+    private void showError(String errorMessage) {
+        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (imageObserver != null) {
+            imageObserver.dispose();
+        }
+    }
+
+    private void uploadImagePath(File file) {
+        RequestBody requestFile =
+                RequestBody.create(MediaType.parse("image/jpeg"), file);
+        MultipartBody.Part body =
+                MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+        Utils.showProgressDialog(this);
+        commonClassForAPI.uploadImage(imageObserver, body);
     }
 
     private class FetchUrl extends AsyncTask<String, Void, String> {
@@ -463,116 +641,6 @@ public class CustomerDetailActivity extends AppCompatActivity implements OnMapRe
             }
 
 
-
-
         }
     }
-    void staticPolyLine() {
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        for (LatLng latLng : points) {
-            builder.include(latLng);
-        }
-        LatLngBounds bounds = builder.build();
-        CameraUpdate mCameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 2);
-        googleMapMain.animateCamera(mCameraUpdate);
-
-        lineOptions = new PolylineOptions();
-        lineOptions.color(Color.BLACK);
-        lineOptions.width(5);
-        lineOptions.addAll(points);
-        googleMapMain.addPolyline(lineOptions);
-
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != RESULT_CANCELED) {
-            switch (requestCode) {
-                case 0:
-                    Uri selectedImage = Uri.parse(uploadFilePath);
-                  //  mBinding.ivShop.setImageURI(selectedImage);
-                    if (utils.isNetworkAvailable()) {
-                        uploadMultipart();
-                    } else {
-                        Utils.setToast(this, "No Internet Connection");
-                    }
-                    Log.e("Bhagwan ", "" + selectedImage.toString());
-
-                    break;
-                case 1:
-                    if (resultCode == RESULT_OK && data != null) {
-
-                    }
-                    break;
-            }
-        }
-    }
-
-    private void uploadMultipart() {
-        final File fileToUpload = new File(uploadFilePath);
-
-        //uploadImagePath(fileToUpload);
-        Compressor.getDefault(this)
-                .compressToFileAsObservable(fileToUpload)
-                ///.subscribeOn(Schedulers.io())
-                ///.observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<File>() {
-                    @Override
-                    public void call(File file) {
-                        ///compressedImage = file;
-                        uploadImagePath(file);
-                    }
-                }, throwable -> showError(throwable.getMessage()));
-    }
-
-    private void showError(String errorMessage) {
-        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (imageObserver!=null){
-            imageObserver.dispose();
-        }
-    }
-
-    private void uploadImagePath(File file) {
-        RequestBody requestFile =
-                RequestBody.create(MediaType.parse("image/jpeg"), file);
-        MultipartBody.Part body =
-                MultipartBody.Part.createFormData("file", file.getName(), requestFile);
-        Utils.showProgressDialog(this);
-        commonClassForAPI.uploadImage(imageObserver, body);
-    }
-    private final DisposableObserver<String> imageObserver = new DisposableObserver<String>() {
-        @Override
-        public void onNext(@NotNull String response) {
-            try {
-
-
-                if (response != null) {
-                  String  mainURl = BuildConfig.apiEndpoint + response;
-                    startActivity(new Intent(CustomerDetailActivity.this,CapcherImageActivity.class).
-                        putExtra("model",customerModel).putExtra("ShopFound",shopFound).putExtra("imageurl",mainURl));
-                    Log.e("DaysBeatList_model", mainURl);
-                } else {
-                    Toast.makeText(CustomerDetailActivity.this, "Image Not Uploaded", Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public void onError(Throwable e) {
-            e.printStackTrace();
-            Utils.hideProgressDialog(CustomerDetailActivity.this);
-        }
-
-        @Override
-        public void onComplete() {
-            Utils.hideProgressDialog(CustomerDetailActivity.this);
-        }
-    };
 }
