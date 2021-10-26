@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.myshopkirana.activity.HomeActivity;
 import com.myshopkirana.utils.GpsUtils;
+import com.myshopkirana.utils.SharePrefs;
 import com.nabinbhandari.android.permissions.PermissionHandler;
 import com.nabinbhandari.android.permissions.Permissions;
 
@@ -25,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
         new GpsUtils(this).turnGPSOn(isGPSEnable -> {
 
         });
+        SharePrefs.getInstance(MainActivity.this).putInt(SharePrefs.CLUSTER_ID,0);
+        SharePrefs.getInstance(MainActivity.this).putInt(SharePrefs.CITY_ID,0);
 
         callRunTimePermissions();
 

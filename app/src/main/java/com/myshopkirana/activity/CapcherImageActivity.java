@@ -346,24 +346,14 @@ public class CapcherImageActivity extends AppCompatActivity {
                 case 0:
                     Uri selectedImage = Uri.fromFile(new File(uploadFilePath));
                     try {
-                        Date c = Calendar.getInstance().getTime();
-                        Calendar calendar = Calendar.getInstance();
-                        SimpleDateFormat mdformat = new SimpleDateFormat("hh:mm aaa");
-                        String strDate = "" + mdformat.format(calendar.getTime());
-
-                        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
-                        String formattedDate = df.format(c);
-                        String timeate = "Time : " + strDate + " Date : " + formattedDate;
-                        String device = "Device : " + Utils.getDeviceName();
-                        String s = timeate
-                                + System.getProperty("line.separator")
-                                + device
-                                + System.getProperty("line.separator");
+                        SimpleDateFormat df = new SimpleDateFormat("dd/MMM/yyyy,hh:mm aaa");
+                        String date = df.format(Calendar.getInstance().getTime());
+                        Log.e("TIMEEeee",date);
 
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
-                        WatermarkText watermarkText = new WatermarkText(s)
+                        WatermarkText watermarkText = new WatermarkText("Time : "+date)
                                 .setPositionX(0.1)
-                                .setPositionY(0.1)
+                                .setPositionY(0.8)
                                 .setTextColor(getResources().getColor(R.color.status_orange))
                                 .setTextShadow(0.1f, 5, 5, Color.BLACK)
                                 .setTextFont(R.font.segoeuib)

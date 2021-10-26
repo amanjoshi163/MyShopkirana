@@ -35,8 +35,8 @@ public class SharePrefs {
     public static String PEOPLE_LNG = "people_lng";
     public static String TRIP_START_TIME = "trip_start_time";
     public static String TOTAL_TRAVEL_TIME = "total_travel_time";
-    public static String PEOPLE_ID = "people_id";
-    public static String CURRENT_DATE = "current_date";
+    public static String CITY_ID = "city_id";
+    public static String CLUSTER_ID = "Cluster_ID";
     public static String CURRENT_DATE_LOCATION = "current_date_location";
     public static String RECORDING_FILE = "recording_file";
     public static String SHOP_IMAGE = "shop_image";
@@ -53,7 +53,7 @@ public class SharePrefs {
     public static String DEAULT_CUSTOMER_ID = "Default_Customer_Id";
     public static String WAREHOUSE_ID = "warehouse_id";
     public static String PEOPLE_WAREHOUSE_ID = "people_warehouse_id";
-    public static String CITY_ID = "city_id";
+
     public static String DATE_OF_BIRTH = "DOB";
     public static String CITY_NAME = "CITY_NAME";
     public static String ITEM_FAV_JSON = "ItemFavJson";

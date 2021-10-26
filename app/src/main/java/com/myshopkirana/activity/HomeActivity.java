@@ -11,7 +11,6 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -30,6 +29,7 @@ import com.myshopkirana.model.CustomerModel;
 import com.myshopkirana.utils.CommonClassForAPI;
 import com.myshopkirana.utils.GPSTracker;
 import com.myshopkirana.utils.GpsUtils;
+import com.myshopkirana.utils.SharePrefs;
 import com.myshopkirana.utils.Utils;
 import com.nabinbhandari.android.permissions.PermissionHandler;
 import com.nabinbhandari.android.permissions.Permissions;
@@ -49,6 +49,7 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         public void onNext(ArrayList<CustomerModel> custList) {
             try {
+
                 custMainList = new ArrayList<>();
                 custMainList = custList;
                 customerAdapter.updateList(custMainList);
@@ -103,18 +104,39 @@ public class HomeActivity extends AppCompatActivity {
                 }
                 int pos = 0;
                 boolean b = false;
-                for (int i = 0; i < cMainList.size(); i++) {
-                    if (!cityName.isEmpty()) {
-                        if (cityName.equalsIgnoreCase(cMainList.get(i).getCityName().toLowerCase())) {
+                int CityId = SharePrefs.getInstance(HomeActivity.this).getInt(SharePrefs.CITY_ID);
+                if (CityId == 0) {
+                    for (int i = 0; i < cMainList.size(); i++) {
+                        if (!cityName.isEmpty()) {
+                            if (cityName.equalsIgnoreCase(cMainList.get(i).getCityName())) {
+                                SharePrefs.getInstance(HomeActivity.this).putInt(SharePrefs.CITY_ID, cMainList.get(i).getCityid());
+
+                                b = true;
+                                pos = i;
+                                break;
+                            }
+                        }
+                    }
+                    if (b) {
+                        mBinding.spnCity.setSelection(pos);
+                    }
+                } else {
+                    for (int i = 0; i < cMainList.size(); i++) {
+//                        if (!cityName.isEmpty()) {
+                        if (CityId == cMainList.get(i).getCityid()) {
+                            SharePrefs.getInstance(HomeActivity.this).putInt(SharePrefs.CITY_ID, cMainList.get(i).getCityid());
+
                             b = true;
                             pos = i;
                             break;
                         }
+//                        }
+                    }
+                    if (b) {
+                        mBinding.spnCity.setSelection(pos);
                     }
                 }
-                if (b) {
-                    mBinding.spnCity.setSelection(pos);
-                }
+                mBinding.llmainview.setVisibility(View.VISIBLE);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -141,16 +163,30 @@ public class HomeActivity extends AppCompatActivity {
         public void onNext(ArrayList<ClusterModel> cList) {
             try {
                 clusterList = new ArrayList<>();
-//                ClusterModel clusterModel = new ClusterModel();
-//                clusterModel.setClusterId(00);
-//                clusterModel.setClusterName("Select Cluster");
-//                clusterModel.setClusterLatLngList(new ArrayList<>());
-//                cList.add(clusterModel);
 
                 clusterList = cList;
                 ClusterAdapter adapter = new ClusterAdapter(HomeActivity.this,
                         R.layout.listitems_layout, R.id.cityname, clusterList);
                 mBinding.spnCluster.setAdapter(adapter);
+                int clusterId = SharePrefs.getInstance(HomeActivity.this).getInt(SharePrefs.CLUSTER_ID);
+                if (clusterId != 0) {
+                    boolean b = false;
+                    int pos = 0;
+                    for (int i = 0; i < clusterList.size(); i++) {
+//                        if (!cityName.isEmpty()) {
+                        if (clusterId == clusterList.get(i).getClusterId()) {
+                            SharePrefs.getInstance(HomeActivity.this).putInt(SharePrefs.CLUSTER_ID, clusterList.get(i).getClusterId());
+
+                            b = true;
+                            pos = i;
+                            break;
+                        }
+//                        }
+                    }
+                    if (b) {
+                        mBinding.spnCluster.setSelection(pos);
+                    }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -177,18 +213,19 @@ public class HomeActivity extends AppCompatActivity {
 
         });
         callRunTimePermissions();
-        inits();
+
 
     }
 
 
     public void callRunTimePermissions() {
-        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
+        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA,};
         Permissions.check(HomeActivity.this/*context*/, permissions, null/*rationale*/, null/*options*/, new PermissionHandler() {
             @Override
             public void onGranted() {
                 Log.e("onDenied", "onGranted");
-
+                Utils.showProgressDialog(HomeActivity.this);
+                inits();
             }
 
             @Override
@@ -226,6 +263,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 
                 int cityid = cMainList.get(pos).getCityid();
+                SharePrefs.getInstance(HomeActivity.this).putInt(SharePrefs.CITY_ID, cityid);
 
                 Utils.showProgressDialog(HomeActivity.this);
                 callClusterApi(cityid);
@@ -234,19 +272,38 @@ public class HomeActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+        mBinding.llreset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharePrefs.getInstance(HomeActivity.this).putInt(SharePrefs.CLUSTER_ID, 0);
+                SharePrefs.getInstance(HomeActivity.this).putInt(SharePrefs.CITY_ID, 0);
+
+                callRunTimePermissions();
+
+            }
+        });
 
         mBinding.spnCluster.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+//                int ClusterId = SharePrefs.getInstance(HomeActivity.this).getInt(SharePrefs.CLUSTER_ID);
+//                clusterLatLngList = new ArrayList<>();
+//                if (ClusterId == 0) {
                 int clusterId = clusterList.get(pos).getClusterId();
-                clusterLatLngList = new ArrayList<>();
-                if (clusterId == 00) {
-                    mBinding.rvRecycle.setVisibility(View.GONE);
-                } else {
-                    Utils.showProgressDialog(HomeActivity.this);
-                    mBinding.rvRecycle.setVisibility(View.VISIBLE);
-                    clusterLatLngList = clusterList.get(pos).getClusterLatLngList();
-                    calCustomerList(clusterId);
-                }
+
+                Utils.showProgressDialog(HomeActivity.this);
+                mBinding.rvRecycle.setVisibility(View.VISIBLE);
+
+                SharePrefs.getInstance(HomeActivity.this).putInt(SharePrefs.CLUSTER_ID, clusterId);
+                clusterLatLngList = clusterList.get(pos).getClusterLatLngList();
+                calCustomerList(clusterId);
+
+//                } else {
+//                    Utils.showProgressDialog(HomeActivity.this);
+//                    mBinding.rvRecycle.setVisibility(View.VISIBLE);
+//                    SharePrefs.getInstance(HomeActivity.this).putInt(SharePrefs.CLUSTER_ID, ClusterId);
+//                    clusterLatLngList = clusterList.get(pos).getClusterLatLngList();
+//                    calCustomerList(ClusterId);
+//                }
             }
 
             public void onNothingSelected(AdapterView<?> parent) {
@@ -264,7 +321,7 @@ public class HomeActivity extends AppCompatActivity {
         if (utils.isNetworkAvailable()) {
             calcityApi();
         } else {
-            Utils.hideProgressDialog(HomeActivity.this);
+
             Utils.setToast(HomeActivity.this, getString(R.string.internet_connection));
         }
 

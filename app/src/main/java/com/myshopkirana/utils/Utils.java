@@ -54,8 +54,7 @@ public class Utils {
     public Utils(Context _mContext) {
         context = _mContext;
 
-        WAREHOUSEID= SharePrefs.getInstance(_mContext).getInt(SharePrefs.WAREHOUSE_ID);
-        PEOPLEID= SharePrefs.getInstance(_mContext).getInt(SharePrefs.PEOPLE_ID);
+
     }
 
     public static void setToast(Context _mContext, String str) {
@@ -289,14 +288,14 @@ public class Utils {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
-    public static String getDeviceName() {
-        String manufacturer = Build.MANUFACTURER;
-        String model = Build.MODEL;
-        if (model.startsWith(manufacturer)) {
-            return capitalize(model);
-        }
-        return capitalize(manufacturer) + " " + model;
-    }
+//    public static String getDeviceName() {
+//        String manufacturer = Build.MANUFACTURER;
+//        String model = Build.MODEL;
+//        if (model.startsWith(manufacturer)) {
+//            return capitalize(model);
+//        }
+//        return capitalize(manufacturer) + " " + model;
+//    }
 
     private static String capitalize(String str) {
         if (TextUtils.isNullOrEmpty(str)) {

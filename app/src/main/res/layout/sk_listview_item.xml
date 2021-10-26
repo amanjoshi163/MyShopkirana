@@ -11,7 +11,7 @@
         android:layout_marginTop="5dp"
 
         app:cardCornerRadius="10dp"
-        app:cardElevation="5dp"
+        app:cardElevation="2dp"
         app:cardMaxElevation="1dp"
         app:cardUseCompatPadding="true">
 
@@ -20,7 +20,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/size5">
+           android:layout_marginLeft="@dimen/size5"
+            android:layout_marginRight="@dimen/size5"
+            >
 
 
             <LinearLayout
@@ -85,9 +87,10 @@
 
                     android:id="@+id/txt_add_value"
                     style="@style/CommanStyleAN"
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/size5"
+                    android:layout_marginTop="@dimen/size8"
                     android:text="@string/txt_shipping_address"
                     android:textSize="@dimen/size15"
 
