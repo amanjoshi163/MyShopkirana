@@ -1,10 +1,14 @@
 package com.myshopkirana.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class ClusterLatLngModel implements Serializable {
 
+    @SerializedName("lat")
     private double lat;
+    @SerializedName("lng")
     private double lng;
 
     public double getLat() {

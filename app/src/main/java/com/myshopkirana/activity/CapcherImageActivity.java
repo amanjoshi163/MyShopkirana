@@ -50,12 +50,13 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import rx.functions.Action1;
+//import rx.functions.Action1;
+//import rx.functions.Action1;
 
 public class CapcherImageActivity extends AppCompatActivity {
     ActivityCapcherImageBinding mBinding;
     GPSTracker gpsTracker;
     Geocoder geocoder;
-    String fullAddress = "";
     // upload image
     private final DisposableObserver<String> imageObserver = new DisposableObserver<String>() {
         @Override
@@ -87,6 +88,7 @@ public class CapcherImageActivity extends AppCompatActivity {
             Utils.hideProgressDialog(CapcherImageActivity.this);
         }
     };
+    String fullAddress = "";
     String localAdress, landmarkArea, shopFoundValue, mainURl;
     // But item response
     DisposableObserver<Boolean> updateCustomer = new DisposableObserver<Boolean>() {
@@ -118,41 +120,13 @@ public class CapcherImageActivity extends AppCompatActivity {
 
     private void calltimeandAddress() {
         try {
-
-
             gpsTracker = new GPSTracker(CapcherImageActivity.this);
             List<Address> addresses;
-
-
             addresses = geocoder.getFromLocation(gpsTracker.getLatitude(), gpsTracker.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-
             String address = "" + addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-            String city = "" + addresses.get(0).getLocality();
-            String state = "" + addresses.get(0).getAdminArea();
-            String country = "" + addresses.get(0).getCountryName();
-            String postalCode = "" + addresses.get(0).getPostalCode();
-            String knownName = "" + addresses.get(0).getFeatureName();
-            fullAddress = address + "," + city + "," + postalCode + "," + state + "," + knownName + "," + country;
             mBinding.txtAddress.setVisibility(View.VISIBLE);
-            mBinding.txtAddress.setText("Current Address :" + fullAddress);
+            mBinding.txtAddress.setText("Current Address :" + address);
 
-//
-//            Date c = Calendar.getInstance().getTime();
-//            Calendar calendar = Calendar.getInstance();
-//            SimpleDateFormat mdformat = new SimpleDateFormat("hh:mm aaa");
-//            String strDate = "" + mdformat.format(calendar.getTime());
-//
-//            SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
-//            String formattedDate = df.format(c);
-//            String timeate = "Time : " + strDate + " Date : " + formattedDate;
-//            String device = "Device : " + Utils.getDeviceName();
-//            String s = timeate
-//                    + System.getProperty("line.separator")
-//                    + device
-//                    + System.getProperty("line.separator");
-//
-//            mBinding.txtTime.setText(s);
-//            mBinding.txtTime.setVisibility(View.VISIBLE);
         } catch (Exception e) {
 
         }
@@ -348,10 +322,10 @@ public class CapcherImageActivity extends AppCompatActivity {
                     try {
                         SimpleDateFormat df = new SimpleDateFormat("dd/MMM/yyyy,hh:mm aaa");
                         String date = df.format(Calendar.getInstance().getTime());
-                        Log.e("TIMEEeee",date);
+                        Log.e("TIMEEeee", date);
 
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
-                        WatermarkText watermarkText = new WatermarkText("Time : "+date)
+                        WatermarkText watermarkText = new WatermarkText("Time : " + date)
                                 .setPositionX(0.1)
                                 .setPositionY(0.8)
                                 .setTextColor(getResources().getColor(R.color.status_orange))
@@ -393,7 +367,7 @@ public class CapcherImageActivity extends AppCompatActivity {
     }
 
     private void uploadMultipart() {
-        final File fileToUpload = new File(uploadFilePath);
+        File fileToUpload = new File(uploadFilePath);
 
         //uploadImagePath(fileToUpload);
         Compressor.getDefault(this)
@@ -404,7 +378,7 @@ public class CapcherImageActivity extends AppCompatActivity {
                     @Override
                     public void call(File file) {
                         ///compressedImage = file;
-                        uploadImagePath(file);
+                        uploadImagePath(fileToUpload);
                     }
                 }, throwable -> showError(throwable.getMessage()));
     }
