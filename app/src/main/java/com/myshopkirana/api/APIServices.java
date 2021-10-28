@@ -6,6 +6,7 @@ import com.google.gson.JsonPrimitive;
 import com.myshopkirana.model.CityModel;
 import com.myshopkirana.model.ClusterModel;
 import com.myshopkirana.model.CustomerModel;
+import com.myshopkirana.model.CustomerPostModel;
 import com.myshopkirana.model.ImageResponse;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public interface APIServices {
 
 
     @POST("Test/UpdateCustomer")
-    Observable<Boolean> getResponse(@Body CustomerModel customerModel);
+    Observable<Boolean> getResponse(@Body CustomerPostModel customerModel);
 
 
 }

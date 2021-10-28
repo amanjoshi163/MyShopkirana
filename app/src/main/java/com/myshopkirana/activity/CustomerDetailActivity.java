@@ -73,12 +73,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-
 import id.zelory.compressor.Compressor;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -88,20 +84,28 @@ import rx.functions.Action1;
 
 public class CustomerDetailActivity extends AppCompatActivity implements OnMapReadyCallback {
     GoogleMap googleMapMain;
-    String shopFound = "";
+    int shopFound = 0;
     private ActivityCustomerDetailBinding mBinding;
 
     private CustomerModel customerModel;
+    private LatLng cLatLng;
+    private PolylineOptions lineOptions;
+    private String destLatLng;
+    private GPSTracker gpsTracker;
+    private String fProfile = "";
+    private String uploadFilePath;
+    private Utils utils;
+    private String distance = "";
     private final DisposableObserver<String> imageObserver = new DisposableObserver<String>() {
         @Override
         public void onNext(@NotNull String response) {
             try {
 
-Utils.hideProgressDialog(CustomerDetailActivity.this);
+                Utils.hideProgressDialog(CustomerDetailActivity.this);
                 if (response != null) {
                     String mainURl = BuildConfig.apiEndpoint + response;
                     startActivity(new Intent(CustomerDetailActivity.this, CapcherImageActivity.class).
-                            putExtra("model", customerModel).putExtra("ShopFound", shopFound).putExtra("imageurl", mainURl));
+                            putExtra("model", customerModel).putExtra("ShopFound", shopFound).putExtra("imageurl", mainURl).putExtra("distance", distance));
                     Log.e("DaysBeatList_model", mainURl);
                 } else {
                     Toast.makeText(CustomerDetailActivity.this, "Image Not Uploaded", Toast.LENGTH_SHORT).show();
@@ -122,13 +126,6 @@ Utils.hideProgressDialog(CustomerDetailActivity.this);
             Utils.hideProgressDialog(CustomerDetailActivity.this);
         }
     };
-    private LatLng cLatLng;
-    private PolylineOptions lineOptions;
-    private String destLatLng;
-    private GPSTracker gpsTracker;
-    private String fProfile = "";
-    private String uploadFilePath;
-    private Utils utils;
     private CommonClassForAPI commonClassForAPI;
     private ArrayList<LatLng> points = new ArrayList<>();
 
@@ -205,7 +202,7 @@ Utils.hideProgressDialog(CustomerDetailActivity.this);
             @Override
             public void onClick(View v) {
 
-                callRunTimePermissions("true");
+                callRunTimePermissions(1);
 //                requestWritePermission();
             }
         });
@@ -214,7 +211,7 @@ Utils.hideProgressDialog(CustomerDetailActivity.this);
         mBinding.llBottomSheet.llTakePhotoNotAble.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callRunTimePermissions("false");
+                callRunTimePermissions(0);
 
             }
         });
@@ -230,7 +227,7 @@ Utils.hideProgressDialog(CustomerDetailActivity.this);
     }
 
 
-    public void callRunTimePermissions(String shop) {
+    public void callRunTimePermissions(int isshopFound) {
 
         String[] permissions = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         Permissions.check(CustomerDetailActivity.this/*context*/, permissions, null/*rationale*/, null/*options*/, new PermissionHandler() {
@@ -239,7 +236,7 @@ Utils.hideProgressDialog(CustomerDetailActivity.this);
                 Log.e("onDenied", "onGranted");
 //                startActivity(new Intent(CustomerDetailActivity.this,CapcherImageActivity.class).
 //                        putExtra("model",customerModel).putExtra("ShopFound",shopFound));
-                shopFound = shop;
+                shopFound = isshopFound;
                 chooseImage(CustomerDetailActivity.this);
             }
 
@@ -466,6 +463,7 @@ Utils.hideProgressDialog(CustomerDetailActivity.this);
                 case 0:
 
                     try {
+                        Utils.showProgressDialog(CustomerDetailActivity.this);
                         Uri selectedImage = Uri.fromFile(new File(uploadFilePath));
                         SimpleDateFormat df = new SimpleDateFormat("dd/MMM/yyyy,hh:mm aaa");
                         String date = df.format(Calendar.getInstance().getTime());
@@ -498,7 +496,7 @@ Utils.hideProgressDialog(CustomerDetailActivity.this);
                     }
 
                     if (utils.isNetworkAvailable()) {
-                        Utils.showProgressDialog(CustomerDetailActivity.this);
+
                         uploadMultipart();
                     } else {
                         Utils.setToast(this, "No Internet Connection");
@@ -515,7 +513,7 @@ Utils.hideProgressDialog(CustomerDetailActivity.this);
     }
 
     private void uploadMultipart() {
-          File fileToUpload = new File(uploadFilePath);
+        File fileToUpload = new File(uploadFilePath);
 
 //        uploadImagePath(fileToUpload);
 
@@ -543,7 +541,7 @@ Utils.hideProgressDialog(CustomerDetailActivity.this);
                 .subscribe(new Action1<File>() {
                     @Override
                     public void call(File file) {
-                         ///compressedImage = file;
+                        ///compressedImage = file;
                         uploadImagePath(file);
                     }
                 }, throwable -> showError(throwable.getMessage()));
@@ -650,7 +648,9 @@ Utils.hideProgressDialog(CustomerDetailActivity.this);
                 for (int j = 0; j < path.size(); j++) {
                     HashMap<String, String> point = path.get(j);
 
-
+                    if (j == 0) {    // Get distance from the list
+                        distance = point.get("distance");
+                    }
                     if (point.get("lat") != null) {
                         double lat = Double.parseDouble(point.get("lat"));
                         double lng = Double.parseDouble(point.get("lng"));
@@ -661,6 +661,12 @@ Utils.hideProgressDialog(CustomerDetailActivity.this);
                 }
 
 
+                if (!distance.equals(null)) {
+                    String[] separated = distance.split(" ");
+                    distance = separated[0]; // this will contain "Fruit"
+
+                }
+                Log.e("Distnedsfs", ">>>" + distance);
                 // Adding all the points in the route to LineOptions
                 staticPolyLine();
 //                lineOptions.addAll(points);

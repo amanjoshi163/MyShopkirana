@@ -27,6 +27,7 @@ import com.myshopkirana.BuildConfig;
 import com.myshopkirana.R;
 import com.myshopkirana.databinding.ActivityCapcherImageBinding;
 import com.myshopkirana.model.CustomerModel;
+import com.myshopkirana.model.CustomerPostModel;
 import com.myshopkirana.utils.CommonClassForAPI;
 import com.myshopkirana.utils.GPSTracker;
 import com.myshopkirana.utils.Utils;
@@ -57,6 +58,7 @@ public class CapcherImageActivity extends AppCompatActivity {
     ActivityCapcherImageBinding mBinding;
     GPSTracker gpsTracker;
     Geocoder geocoder;
+    String fullAddress = "", distance = "";
     // upload image
     private final DisposableObserver<String> imageObserver = new DisposableObserver<String>() {
         @Override
@@ -88,14 +90,15 @@ public class CapcherImageActivity extends AppCompatActivity {
             Utils.hideProgressDialog(CapcherImageActivity.this);
         }
     };
-    String fullAddress = "";
-    String localAdress, landmarkArea, shopFoundValue, mainURl;
+    String localAdress, landmarkArea,  mainURl;
     // But item response
+    int shopFoundValue=0;
     DisposableObserver<Boolean> updateCustomer = new DisposableObserver<Boolean>() {
         @Override
         public void onNext(Boolean jsonObject) {
             Utils.hideProgressDialog(CapcherImageActivity.this);
             if (jsonObject) {
+                Toast.makeText(CapcherImageActivity.this, "Successfully Submitted", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(CapcherImageActivity.this, HomeActivity.class));
                 finish();
             }
@@ -123,9 +126,10 @@ public class CapcherImageActivity extends AppCompatActivity {
             gpsTracker = new GPSTracker(CapcherImageActivity.this);
             List<Address> addresses;
             addresses = geocoder.getFromLocation(gpsTracker.getLatitude(), gpsTracker.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-            String address = "" + addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+            fullAddress = "" + addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+
             mBinding.txtAddress.setVisibility(View.VISIBLE);
-            mBinding.txtAddress.setText("Current Address :" + address);
+            mBinding.txtAddress.setText("Current Address :" + fullAddress);
 
         } catch (Exception e) {
 
@@ -137,8 +141,9 @@ public class CapcherImageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_capcher_image);
         customerModel = (CustomerModel) getIntent().getSerializableExtra("model");
-        shopFoundValue = getIntent().getStringExtra("ShopFound");
+        shopFoundValue = getIntent().getIntExtra("ShopFound",0);
         mainURl = getIntent().getStringExtra("imageurl");
+        distance = getIntent().getStringExtra("distance");
 
         initView();
     }
@@ -161,13 +166,14 @@ public class CapcherImageActivity extends AppCompatActivity {
             }
         });
         if (mainURl != null) {
-            calltimeandAddress();
+
             Glide.with(CapcherImageActivity.this)
                     .load(mainURl)
                     .into(mBinding.ivShop);
+            calltimeandAddress();
         }
 
-        if (shopFoundValue.equals("false")) {
+        if (shopFoundValue==0) {
             mBinding.txtTakepic.setText("Not Able To Track");
             mBinding.cbShopNotFound.setVisibility(View.VISIBLE);
         } else {
@@ -196,7 +202,7 @@ public class CapcherImageActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (mainURl == null) {
                     Utils.setToast(getApplicationContext(), "Please Upload Shop Image");
-                } else if (shopFoundValue.equals("false")) {
+                } else if (shopFoundValue==0) {
                     if (!mBinding.cbShopNotFound.isChecked()) {
                         Utils.setToast(getApplicationContext(), "Please Checked Shop not Found");
                     } else {
@@ -215,6 +221,7 @@ public class CapcherImageActivity extends AppCompatActivity {
     }
 
     private void callApi() {
+        gpsTracker=new GPSTracker(CapcherImageActivity.this);
         if (customerModel.getLandMark() != null) {
             landmarkArea = customerModel.getLandMark();
         } else {
@@ -225,21 +232,31 @@ public class CapcherImageActivity extends AppCompatActivity {
         } else {
             localAdress = "";
         }
+        double dist = 0.0;
+        if (!distance.isEmpty()) {
+            dist = Double.parseDouble(distance);
+        }
+        String cid=customerModel.getCustomerId()+"";
+        String skcode=customerModel.getSkcode()+"";
+        String shopname=customerModel.getShopName();
+        String shipAddres=customerModel.getShippingAddress();
+        String landMark=customerModel.getLandMark();
+        String lat=customerModel.getLat()+"";
+        String lng=customerModel.getLg()+"";
+        String NewLat=gpsTracker.getLatitude()+"";
+        String NewLng=gpsTracker.getLongitude()+"";
+        CustomerPostModel customerPostModel=new CustomerPostModel(cid,skcode,shopname,shipAddres,landMark,lat,lng,
+                shopFoundValue+"",
+                mainURl,fullAddress,NewLat,NewLng,dist+"");
 
-        CustomerModel model = new CustomerModel(customerModel.getCustomerId(),
-                customerModel.getSkcode(),
-                customerModel.getShopName(),
-                localAdress,
-                landmarkArea,
-                customerModel.getLat(),
-                customerModel.getLg(),
-                shopFoundValue,
-                mainURl,
-                fullAddress,
-                gpsTracker.getLatitude(), gpsTracker.getLongitude());
+
+
+
+
         if (utils.isNetworkAvailable()) {
             if (commonClassForAPI != null) {
-                commonClassForAPI.updateCustomer(updateCustomer, model);
+                commonClassForAPI.updateCustomer(updateCustomer, customerPostModel);
+
             }
         } else {
             Utils.setToast(getApplicationContext(), "No internet Connection");

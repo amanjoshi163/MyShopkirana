@@ -10,6 +10,7 @@ import com.myshopkirana.api.RestClient;
 import com.myshopkirana.model.CityModel;
 import com.myshopkirana.model.ClusterModel;
 import com.myshopkirana.model.CustomerModel;
+import com.myshopkirana.model.CustomerPostModel;
 import com.myshopkirana.model.ImageResponse;
 
 import java.util.ArrayList;
@@ -196,7 +197,7 @@ public class CommonClassForAPI {
 //
 
     //buy product
-    public void updateCustomer(DisposableObserver fetchProductDes, CustomerModel model) {
+    public void updateCustomer(DisposableObserver fetchProductDes, CustomerPostModel model) {
         RestClient.getInstance().getService().getResponse(model)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

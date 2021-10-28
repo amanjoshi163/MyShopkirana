@@ -11,6 +11,17 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-keepclassmembers,allowobfuscation class * {
+    @com.google.gson.annotations.SerializedName <fields>;
+  }
+-keep,allowobfuscation @interface SerializedName
+
+-keepclassmembers,allowshrinking,allowobfuscation class NetworkDispatcher {
+    void processRequest();
+}
+-keepclassmembers,allowshrinking,allowobfuscation class  CacheDispatcher {
+    void processRequest();
+}
 
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
