@@ -303,32 +303,6 @@ public class CapcherImageActivity extends AppCompatActivity {
         return file;
     }
 
-    //    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (resultCode != RESULT_CANCELED) {
-//            switch (requestCode) {
-//                case 0:
-//                    Uri selectedImage = Uri.parse(uploadFilePath);
-//
-//
-//                    mBinding.ivShop.setImageURI(selectedImage);
-//                    if (utils.isNetworkAvailable()) {
-//                        uploadMultipart();
-//                    } else {
-//                        Utils.setToast(this, "No Internet Connection");
-//                    }
-//                    Log.e("Bhagwan ", "" + selectedImage.toString());
-//
-//                    break;
-//                case 1:
-//                    if (resultCode == RESULT_OK && data != null) {
-//
-//                    }
-//                    break;
-//            }
-//        }
-//    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -386,16 +360,17 @@ public class CapcherImageActivity extends AppCompatActivity {
     private void uploadMultipart() {
         File fileToUpload = new File(uploadFilePath);
 
-        //uploadImagePath(fileToUpload);
         Compressor.getDefault(this)
+
                 .compressToFileAsObservable(fileToUpload)
+
                 ///.subscribeOn(Schedulers.io())
                 ///.observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<File>() {
                     @Override
                     public void call(File file) {
                         ///compressedImage = file;
-                        uploadImagePath(fileToUpload);
+                        uploadImagePath(file);
                     }
                 }, throwable -> showError(throwable.getMessage()));
     }

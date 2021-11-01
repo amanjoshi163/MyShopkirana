@@ -1,6 +1,8 @@
 <resources>
     <string name="default_notification_channel_id" translatable="false">Sales</string>
+    <string name="app_name_new" translatable="false">Sk Customer</string>
     <string name="title_home">Home</string>
+
     <string name="checkout">Checkout</string>
     <string name="internet_connection">Please Connect to Internet</string>
     <string name="enter_valid_password">Please enter a valid Password</string>

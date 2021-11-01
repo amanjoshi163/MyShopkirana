@@ -36,6 +36,8 @@ import com.nabinbhandari.android.permissions.Permissions;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -163,8 +165,7 @@ public class HomeActivity extends AppCompatActivity {
         public void onNext(ArrayList<ClusterModel> cList) {
             try {
                 clusterList = new ArrayList<>();
-
-                clusterList = cList;
+                clusterList.addAll(cList);
                 ClusterAdapter adapter = new ClusterAdapter(HomeActivity.this,
                         R.layout.listitems_layout, R.id.cityname, clusterList);
                 mBinding.spnCluster.setAdapter(adapter);
@@ -214,27 +215,6 @@ public class HomeActivity extends AppCompatActivity {
         });
         callRunTimePermissions();
 
-        try {
-
-
-            gpsTracker = new GPSTracker(HomeActivity.this);
-            List<Address> addresses;
-
-
-            addresses = geocoder.getFromLocation(gpsTracker.getLatitude(), gpsTracker.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-
-            String address = "" + addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-            String city = "" + addresses.get(0).getLocality();
-            String state = "" + addresses.get(0).getAdminArea();
-            String country = "" + addresses.get(0).getCountryName();
-            String postalCode = "" + addresses.get(0).getPostalCode();
-            String knownName = "" + addresses.get(0).getFeatureName();
-          String  fullAddress = address + "," + city + "," + postalCode + "," + state + "," + knownName + "," + country;
-
- Log.e("fullAdddressss",fullAddress);
-        } catch (Exception e) {
-
-        }
     }
 
 
@@ -271,12 +251,9 @@ public class HomeActivity extends AppCompatActivity {
         mBinding.rvRecycle.setLayoutManager(new LinearLayoutManager(HomeActivity.this));
         customerAdapter = new CustomerAdapter(HomeActivity.this, custMainList);
         mBinding.rvRecycle.setAdapter(customerAdapter);
-
-
         gpsTracker = new GPSTracker(HomeActivity.this);
 
 
-        // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
 
 
         mBinding.spnCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -305,9 +282,7 @@ public class HomeActivity extends AppCompatActivity {
 
         mBinding.spnCluster.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-//                int ClusterId = SharePrefs.getInstance(HomeActivity.this).getInt(SharePrefs.CLUSTER_ID);
-//                clusterLatLngList = new ArrayList<>();
-//                if (ClusterId == 0) {
+
                 int clusterId = clusterList.get(pos).getClusterId();
 
                 Utils.showProgressDialog(HomeActivity.this);
@@ -317,13 +292,6 @@ public class HomeActivity extends AppCompatActivity {
                 clusterLatLngList = clusterList.get(pos).getClusterLatLngList();
                 calCustomerList(clusterId);
 
-//                } else {
-//                    Utils.showProgressDialog(HomeActivity.this);
-//                    mBinding.rvRecycle.setVisibility(View.VISIBLE);
-//                    SharePrefs.getInstance(HomeActivity.this).putInt(SharePrefs.CLUSTER_ID, ClusterId);
-//                    clusterLatLngList = clusterList.get(pos).getClusterLatLngList();
-//                    calCustomerList(ClusterId);
-//                }
             }
 
             public void onNothingSelected(AdapterView<?> parent) {
