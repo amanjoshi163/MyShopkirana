@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.myshopkirana"
-        minSdk 21
+        minSdk 19
         targetSdk 30
         versionCode 1
         versionName "1.0"
@@ -28,17 +28,17 @@ android {
             shrinkResources false
             resValue "string", "app_name", "Sk Customer"
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-//            buildConfigField("String", "apiEndpoint", "\"https://er15.xyz:4436\"")
-            buildConfigField("String", "apiEndpoint", "\"https://uat.shopkirana.in\"")
+            buildConfigField("String", "apiEndpoint", "\"https://er15.xyz:4436\"")
+//            buildConfigField("String", "apiEndpoint", "\"https://uat.shopkirana.in\"")
 //            buildConfigField("String", "apiEndpoint", "\"https://internal.er15.xyz\"")
         }
         debug {
             applicationIdSuffix ".debug"
             resValue "string", "app_name", "Sk Customer Debug"
 //            buildConfigField("String", "apiEndpoint", "\"https://safoyauat.shopkirana.in\"")
-            buildConfigField("String", "apiEndpoint", "\"https://uat.shopkirana.in\"")
+//            buildConfigField("String", "apiEndpoint", "\"https://uat.shopkirana.in\"")
 //            buildConfigField("String", "apiEndpoint", "\"https://internal.er15.xyz\"")
-//           buildConfigField("String", "apiEndpoint", "\"https://er15.xyz:4436\"")
+           buildConfigField("String", "apiEndpoint", "\"https://er15.xyz:4436\"")
         }
     }
     compileOptions {

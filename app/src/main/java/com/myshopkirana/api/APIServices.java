@@ -27,11 +27,11 @@ import retrofit2.http.Query;
 public interface APIServices {
 
 
-    @GET("Test/GetActiveWarehouseCity")
+    @GET("api/Test/GetActiveWarehouseCity")
     Observable<ArrayList<CityModel>> getCity();
 
     //https://uat.shopkirana.in/api/Test/GetClusterCityWise?cityid=37
-    @GET("Test/GetClusterCityWise")
+    @GET("api/Test/GetClusterCityWise")
     Observable<ArrayList<ClusterModel>> getCluster(@Query("cityid") int cityid);
 
 //    @Multipart
@@ -40,15 +40,15 @@ public interface APIServices {
 
 
 //    /https://uat.shopkirana.in/api/Test/GetClusterCustomers
-    @POST("/api/Test/GetClusterCustomers")
+    @POST("api/Test/GetClusterCustomers")
     Observable<ArrayList<CustomerModel>> getCustList(@Body  JsonArray clusterValue);
 
     @Multipart
-    @POST("Test/UploadCustomerShopImage")
+    @POST("api/Test/UploadCustomerShopImage")
     Observable<String> imageUpload(@Part MultipartBody.Part body);
 
 
-    @POST("Test/UpdateCustomer")
+    @POST("api/Test/UpdateCustomer")
     Observable<Boolean> getResponse(@Body CustomerPostModel customerModel);
 
 

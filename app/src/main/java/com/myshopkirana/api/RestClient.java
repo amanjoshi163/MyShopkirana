@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.myshopkirana.BuildConfig;
 
 import org.json.JSONObject;
 
@@ -82,8 +83,8 @@ public class RestClient {
                     .build();
 
             retrofit = new Retrofit.Builder()
-//.baseUrl(BuildConfig.apiEndpoint)
-                    .baseUrl("https://uat.shopkirana.in/api/")
+.baseUrl(BuildConfig.apiEndpoint)
+//                    .baseUrl("https://uat.shopkirana.in/api/")
                     .addConverterFactory(GsonConverterFactory.create(new Gson()))
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .client(client)
