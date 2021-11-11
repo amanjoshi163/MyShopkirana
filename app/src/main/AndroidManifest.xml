@@ -2,10 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.myshopkirana">
 
-    <permission
-        android:name="your.package.name.permission.MAPS_RECEIVE"
-        android:protectionLevel="signature" />
 
+    <permission
+        android:name="com.myshopkirana.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature"/>
+    <uses-permission android:name="com.myshopkirana.permission.MAPS_RECEIVE"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
