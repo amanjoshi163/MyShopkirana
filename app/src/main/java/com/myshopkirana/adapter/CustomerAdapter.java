@@ -2,10 +2,10 @@ package com.myshopkirana.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,16 +17,14 @@ import com.myshopkirana.model.CustomerModel;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 public class
 CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHolder> {
 
 
-    private   Activity activity;
-    private   ArrayList<CustomerModel> itemLists;
+    private final Activity activity;
+    private ArrayList<CustomerModel> itemLists;
 
 
     public CustomerAdapter(Activity activity, ArrayList<CustomerModel> itemLists) {
@@ -34,8 +32,8 @@ CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHolder> {
         this.itemLists = itemLists;
     }
 
-    public void updateList(ArrayList<CustomerModel> list){
-      this.itemLists = list;
+    public void updateList(ArrayList<CustomerModel> list) {
+        this.itemLists = list;
         notifyDataSetChanged();
     }
 
@@ -53,8 +51,18 @@ CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHolder> {
         try {
             CustomerModel model = itemLists.get(i);
             viewHolder.mBinding.skCode.setText(activity.getResources().getString(R.string.sk_code) + ": " + model.getSkcode());
-            viewHolder.mBinding.name.setText(activity.getResources().getString(R.string.txt_Shop_Name)+": " + model.getShopName());
-            viewHolder.mBinding.txtAddValue.setText(activity.getResources().getString(R.string.txt_Shop_Address)+": " + model.getShippingAddress());
+
+
+            viewHolder.mBinding.shopname.setText(activity.getResources().getString(R.string.txt_Shop_Name) + ": " + model.getShopName());
+            viewHolder.mBinding.name.setText(activity.getResources().getString(R.string.Name) + ": " + model.getName());
+            viewHolder.mBinding.txtAddValue.setText(activity.getResources().getString(R.string.txt_Shop_Address) + ": " + model.getShippingAddress());
+            if (model.getSkcode() != null) {
+                viewHolder.mBinding.txtMob.setText(activity.getResources().getString(R.string.txt_mob) + " " + model.getSkcode());
+                viewHolder.mBinding.llCall.setVisibility(View.VISIBLE);
+            } else {
+                viewHolder.mBinding.txtMob.setVisibility(View.GONE);
+                viewHolder.mBinding.llCall.setVisibility(View.GONE);
+            }
             viewHolder.mBinding.llDetail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -67,7 +75,12 @@ CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.ViewHolder> {
 
                 }
             });
-
+viewHolder.mBinding.llCall.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        Toast.makeText(activity, "coming soon", Toast.LENGTH_SHORT).show();
+    }
+});
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,6 +1,7 @@
 package com.myshopkirana.activity;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
@@ -10,18 +11,25 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.myshopkirana.R;
 import com.myshopkirana.adapter.CityAdapter;
 import com.myshopkirana.adapter.ClusterAdapter;
 import com.myshopkirana.adapter.CustomerAdapter;
 import com.myshopkirana.databinding.ActivityHomeBinding;
+import com.myshopkirana.interfaces.ClusterSelectionInterface;
 import com.myshopkirana.model.CityModel;
 import com.myshopkirana.model.ClusterLatLngModel;
 import com.myshopkirana.model.ClusterModel;
@@ -36,14 +44,12 @@ import com.nabinbhandari.android.permissions.Permissions;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
 import io.reactivex.observers.DisposableObserver;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements ClusterSelectionInterface {
     CustomerAdapter customerAdapter;
     ArrayList<CustomerModel> custMainList;
     private final DisposableObserver<ArrayList<CustomerModel>> objcutomer = new DisposableObserver<ArrayList<CustomerModel>>() {
@@ -76,7 +82,10 @@ public class HomeActivity extends AppCompatActivity {
     List<Address> addresses;
     GPSTracker gpsTracker;
     Geocoder geocoder;
+    Dialog dialog;
+    String clusterName = "";
     String cityName = "";
+    private String where = "";
     private Utils utils;
     private ActivityHomeBinding mBinding;
     private ArrayList<CityModel> cMainList;
@@ -85,11 +94,7 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         public void onNext(ArrayList<CityModel> cList) {
             try {
-//                cMainList = new ArrayList<>();
-//                CityModel cityModel = new CityModel();
-//                cityModel.setCityid(00);
-//                cityModel.setCityName("Select City");
-//                cList.add(cityModel);
+
 
                 cMainList.addAll(cList);
                 CityAdapter adapter = new CityAdapter(HomeActivity.this,
@@ -99,7 +104,9 @@ public class HomeActivity extends AppCompatActivity {
 
                 try {
                     addresses = geocoder.getFromLocation(gpsTracker.getLatitude(), gpsTracker.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-                    cityName = "" + addresses.get(0).getLocality();
+                    if (addresses != null) {
+                        cityName = "" + addresses.get(0).getLocality();
+                    }
                     System.out.println(cityName);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -157,37 +164,69 @@ public class HomeActivity extends AppCompatActivity {
         }
     };
     private CommonClassForAPI commonClassForAPI;
-    private ArrayList<ClusterLatLngModel> clusterLatLngList;
+    private ArrayList<ArrayList<ClusterLatLngModel>> clusterLatLngList;
     private ArrayList<ClusterModel> clusterList;
     private final DisposableObserver<ArrayList<ClusterModel>> objCluster = new DisposableObserver<ArrayList<ClusterModel>>() {
 
         @Override
         public void onNext(ArrayList<ClusterModel> cList) {
             try {
+                clusterName="";
                 clusterList = new ArrayList<>();
                 clusterList.addAll(cList);
-                ClusterAdapter adapter = new ClusterAdapter(HomeActivity.this,
-                        R.layout.listitems_layout, R.id.cityname, clusterList);
-                mBinding.spnCluster.setAdapter(adapter);
-                int clusterId = SharePrefs.getInstance(HomeActivity.this).getInt(SharePrefs.CLUSTER_ID);
-                if (clusterId != 0) {
-                    boolean b = false;
-                    int pos = 0;
-                    for (int i = 0; i < clusterList.size(); i++) {
-//                        if (!cityName.isEmpty()) {
-                        if (clusterId == clusterList.get(i).getClusterId()) {
-                            SharePrefs.getInstance(HomeActivity.this).putInt(SharePrefs.CLUSTER_ID, clusterList.get(i).getClusterId());
+                JsonArray clusterIds=new JsonArray();
+                Utils.hideProgressDialog(HomeActivity.this);
+                if (where.equals("splash")) {
+//                    callCheckPop(clusterList);
 
-                            b = true;
-                            pos = i;
-                            break;
+                            if (clusterList.size()>0) {
+                                clusterList.get(0).setSelected(true);
+                                if (clusterName.equals("")) {
+                                    clusterName = clusterList.get(0).getClusterName();
+                                } else {
+                                    clusterName = clusterName + "," + clusterList.get(0).getClusterName();
+                                }
+                                mBinding.spnCluster.setText(clusterName);
+
+                                clusterIds.add(clusterList.get(0).getClusterId());
+                                commonClassForAPI.fetchCustomer(objcutomer, clusterIds);
+                                SharePrefs.getInstance(HomeActivity.this).putString(SharePrefs.CLUSTER_ID, new Gson().toJson(clusterIds));
+
+
+                    }
+                }else {
+                    clusterName="";
+                    String jsonString = SharePrefs.getInstance(HomeActivity.this).getString(SharePrefs.CLUSTER_ID);
+                    if (!jsonString.isEmpty()) {
+                           clusterIds = new Gson().fromJson(jsonString, new TypeToken<JsonArray>() {
+                        }.getType());
+                        commonClassForAPI.fetchCustomer(objcutomer, clusterIds);
+                        SharePrefs.getInstance(HomeActivity.this).putString(SharePrefs.CLUSTER_ID, new Gson().toJson(clusterIds));
+
+                        for (int i = 0; i < clusterList.size(); i++) {
+                            for (int j = 0; j < clusterIds.size(); j++) {
+                                if (clusterList.get(i).getClusterId() == Integer.parseInt(clusterIds.get(j)+"")) {
+                                    clusterList.get(i).setSelected(true);
+                                    if (clusterName.equals("")) {
+                                        clusterName = clusterList.get(i).getClusterName();
+                                    } else {
+                                        clusterName = clusterName + "," + clusterList.get(i).getClusterName();
+                                    }
+                                    mBinding.spnCluster.setText(clusterName);
+                                }
+                            }
+
+
                         }
-//                        }
                     }
-                    if (b) {
-                        mBinding.spnCluster.setSelection(pos);
-                    }
+
+
+
+
                 }
+
+
+//
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -206,6 +245,31 @@ public class HomeActivity extends AppCompatActivity {
         }
     };
 
+    private void callCheckPop(ArrayList<ClusterModel> clusterList) {
+        dialog = new Dialog(this);
+        View view = getLayoutInflater().inflate(R.layout.dialog_cluster_main, null);
+        RecyclerView lv = view.findViewById(R.id.custom_list);
+        Button btnCancel = view.findViewById(R.id.btn_cancel);
+        Button btnDone = view.findViewById(R.id.btn_done);
+
+        lv.setLayoutManager(new LinearLayoutManager(HomeActivity.this));
+        ClusterAdapter adapter = new ClusterAdapter(HomeActivity.this,
+                clusterList, btnDone, this);
+
+
+        lv.setAdapter(adapter);
+        dialog.setContentView(view);
+        dialog.show();
+        Window window = dialog.getWindow();
+        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -213,6 +277,7 @@ public class HomeActivity extends AppCompatActivity {
         new GpsUtils(this).turnGPSOn(isGPSEnable -> {
 
         });
+        where = getIntent().getStringExtra("where");
         callRunTimePermissions();
 
     }
@@ -254,8 +319,6 @@ public class HomeActivity extends AppCompatActivity {
         gpsTracker = new GPSTracker(HomeActivity.this);
 
 
-
-
         mBinding.spnCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 
@@ -272,7 +335,7 @@ public class HomeActivity extends AppCompatActivity {
         mBinding.llreset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharePrefs.getInstance(HomeActivity.this).putInt(SharePrefs.CLUSTER_ID, 0);
+                SharePrefs.getInstance(HomeActivity.this).putString(SharePrefs.CLUSTER_ID, "");
                 SharePrefs.getInstance(HomeActivity.this).putInt(SharePrefs.CITY_ID, 0);
 
                 callRunTimePermissions();
@@ -280,23 +343,33 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        mBinding.spnCluster.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+        mBinding.spnCluster.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String jsonString = SharePrefs.getInstance(HomeActivity.this).getString(SharePrefs.CLUSTER_ID);
+                if (!jsonString.isEmpty()) {
+                    ArrayList<Integer> clusterIds = new Gson().fromJson(jsonString, new TypeToken<ArrayList<Integer>>() {
+                    }.getType());
 
-                int clusterId = clusterList.get(pos).getClusterId();
+                    for (int i = 0; i < clusterList.size(); i++) {
+                        for (int j = 0; j < clusterIds.size(); j++) {
+                            if (clusterList.get(i).getClusterId() == clusterIds.get(j)) {
+                                clusterList.get(i).setSelected(true);
 
-                Utils.showProgressDialog(HomeActivity.this);
-                mBinding.rvRecycle.setVisibility(View.VISIBLE);
 
-                SharePrefs.getInstance(HomeActivity.this).putInt(SharePrefs.CLUSTER_ID, clusterId);
-                clusterLatLngList = clusterList.get(pos).getClusterLatLngList();
-                calCustomerList(clusterId);
 
-            }
+                            }
+                        }
 
-            public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                }
+
+
+                callCheckPop(clusterList);
             }
         });
+
 
         mBinding.llMapView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -338,16 +411,6 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-    private void calCustomerList(int clusterId) {
-
-        JsonArray clusterValue = new JsonArray();
-        Integer[] intArray = {clusterId};
-        for (Integer val : intArray) {
-            clusterValue.add(val);
-            System.out.print(val + " ");
-        }
-        commonClassForAPI.fetchCustomer(objcutomer, clusterValue);
-    }
 
     private void callClusterApi(int cityId) {
         commonClassForAPI.fetchCluster(objCluster, cityId);
@@ -374,9 +437,45 @@ public class HomeActivity extends AppCompatActivity {
 
             if (d.getShippingAddress() != null && d.getShippingAddress().toLowerCase().contains(text.toLowerCase())) {
                 temp.add(d);
+            } else if (d.getName() != null && d.getName().toLowerCase().contains(text.toLowerCase())) {
+
+                temp.add(d);
+            } else if (d.getSkcode() != null && d.getSkcode().toLowerCase().contains(text.toLowerCase())) {
+                temp.add(d);
+            } else if (d.getShopName() != null && d.getShopName().toLowerCase().contains(text.toLowerCase())) {
+                temp.add(d);
             }
+
         }
         //update recyclerview
         customerAdapter.updateList(temp);
+    }
+
+    @Override
+    public void SelectedCluster(ArrayList<ClusterModel> list) {
+       callCustomerMethod(list);
+    }
+
+    private void callCustomerMethod(ArrayList<ClusterModel> list) {
+        Utils.showProgressDialog(HomeActivity.this);
+        clusterName="";
+        JsonArray clusterValue = new JsonArray();
+        for (int i = 0; i < list.size(); i++) {
+            clusterValue.add(list.get(i).getClusterId());
+
+            if (clusterName.equals("")) {
+                clusterName = list.get(i).getClusterName();
+            } else {
+                clusterName = clusterName + "," + list.get(i).getClusterName();
+            }
+            clusterLatLngList.add(list.get(i).getClusterLatLngList());
+        }
+
+        mBinding.spnCluster.setText(clusterName);
+        if (dialog!=null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
+        SharePrefs.getInstance(HomeActivity.this).putString(SharePrefs.CLUSTER_ID, new Gson().toJson(clusterValue));
+        commonClassForAPI.fetchCustomer(objcutomer, clusterValue);
     }
 }

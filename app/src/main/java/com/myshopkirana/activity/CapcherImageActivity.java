@@ -99,7 +99,8 @@ public class CapcherImageActivity extends AppCompatActivity {
             Utils.hideProgressDialog(CapcherImageActivity.this);
             if (jsonObject) {
                 Toast.makeText(CapcherImageActivity.this, "Successfully Submitted", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(CapcherImageActivity.this, HomeActivity.class));
+                startActivity(new Intent(CapcherImageActivity.this, HomeActivity.class).putExtra("where","submit"));
+
                 finish();
             }
         }

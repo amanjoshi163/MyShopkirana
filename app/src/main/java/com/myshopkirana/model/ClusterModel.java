@@ -14,8 +14,18 @@ public class ClusterModel implements Serializable {
     @SerializedName("clusterlatlng")
     private ArrayList<ClusterLatLngModel> clusterLatLngList;
 
+    private boolean isSelected;
+
     public int getClusterId() {
         return ClusterId;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
     public void setClusterId(int clusterId) {

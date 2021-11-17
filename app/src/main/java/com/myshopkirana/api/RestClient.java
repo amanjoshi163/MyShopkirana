@@ -72,10 +72,8 @@ public class RestClient {
                     })
                     .addInterceptor(chain -> {
                         Request request = chain.request().newBuilder()
-
                                 .addHeader("authorization", "Bearer ")
                                 .addHeader("noencryption", "1")
-
                                 .build();
                         return chain.proceed(request);
                     })

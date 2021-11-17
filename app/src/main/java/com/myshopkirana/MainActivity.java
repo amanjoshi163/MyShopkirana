@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         /* Create an Intent that will start the Menu-Activity. */
                         Intent mainIntent = new Intent(MainActivity.this, HomeActivity.class);
+                        mainIntent.putExtra("where","splash");
                         startActivity(mainIntent);
                         finish();
                     }

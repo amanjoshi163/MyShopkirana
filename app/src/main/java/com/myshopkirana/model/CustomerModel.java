@@ -21,12 +21,17 @@ public class CustomerModel implements Serializable {
     private double lat;
     @SerializedName("lg")
     private double lg;
+    @SerializedName("Name")
+    private String Name;
 
 
+    public String getName() {
+        return Name;
+    }
 
-
-
-
+    public void setName(String name) {
+        Name = name;
+    }
 
     public int getCustomerId() {
         return CustomerId;

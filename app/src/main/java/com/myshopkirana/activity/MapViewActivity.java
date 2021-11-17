@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -26,10 +27,11 @@ import com.myshopkirana.model.ClusterLatLngModel;
 import com.myshopkirana.utils.TextUtils;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class MapViewActivity extends AppCompatActivity implements OnMapReadyCallback {
     GoogleMap googleMapMain;
-    private ArrayList<ClusterLatLngModel> clusterLatLngList;
+    private ArrayList<ArrayList<ClusterLatLngModel>> clusterLatLngList;
     private ActivityMapViewBinding mBinding;
 
     @Override
@@ -40,9 +42,10 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        clusterLatLngList = (ArrayList<ClusterLatLngModel>) getIntent().getSerializableExtra("mylist");
+        clusterLatLngList = (ArrayList<ArrayList<ClusterLatLngModel>>) getIntent().getSerializableExtra("mylist");
         mBinding.toolbar.title.setText("Map View");
         mBinding.toolbar.back.setVisibility(View.VISIBLE);
+        Log.e("clusterLatLngList",">>>"+clusterLatLngList.size());
         mBinding.toolbar.back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,7 +68,11 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
             return;
         }
         googleMapMain = googleMap;
-        setMarkerdata(clusterLatLngList);
+
+        for (int i = 0; i < clusterLatLngList.size(); i++) {
+            setMarkerdata(clusterLatLngList.get(i));
+        }
+
 
 
     }
@@ -85,13 +92,16 @@ public class MapViewActivity extends AppCompatActivity implements OnMapReadyCall
             googleMapMain.animateCamera(CameraUpdateFactory.newLatLngZoom(new
                     LatLng(cList.get(k).getLat(),
                     cList.get(k).getLng()), 12.0f));
+
+
         }
 
-
+        Random rnd = new Random();
+        int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
         Polygon polygon1 = googleMapMain.addPolygon(new PolygonOptions()
                 .clickable(true)
-                .strokeColor(Color.RED)
-                .fillColor(getResources().getColor(R.color.trans))
+                .strokeColor(color)
+                .fillColor(color)
                 .addAll(latLngList));
 
 

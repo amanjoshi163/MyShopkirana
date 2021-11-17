@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/ll_detail"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
@@ -15,90 +15,149 @@
         app:cardMaxElevation="1dp"
         app:cardUseCompatPadding="true">
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-           android:layout_marginLeft="@dimen/size5"
-            android:layout_marginRight="@dimen/size5"
-            >
 
+            android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/ll_detail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginLeft="@dimen/size5"
+                android:layout_marginRight="@dimen/size5"
+                android:orientation="vertical">
 
-                android:orientation="vertical"
-                android:padding="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
+                    android:layout_marginTop="5dp"
+
+                    android:orientation="vertical"
+                    android:padding="5dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="1">
+
+                        <TextView
+                            android:id="@+id/shopname"
+                            style="@style/CommanStyleAN"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.9"
+                            android:text="ShopName"
+
+                            android:textSize="@dimen/size15" />
+
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:layout_weight="0.1"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_baseline_location_blue" />
+                        </LinearLayout>
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/name"
                         style="@style/CommanStyleAN"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.9"
+                        android:layout_marginTop="@dimen/size5"
                         android:text="Name"
-
-                        android:textSize="@dimen/size15"
-                          />
-
-
+                        android:textSize="@dimen/size15" />
 
                     <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/size5"
                         android:orientation="horizontal"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:layout_weight="0.1">
+                        android:weightSum="1">
 
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:layout_gravity="center"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_baseline_location_blue"
-                             />
+                            android:layout_weight="0.4">
+
+                            <TextView
+                                android:id="@+id/skCode"
+                                style="@style/CommanStyleAN"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+
+                                android:text="@string/sk_code"
+
+                                android:textSize="@dimen/size15" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:layout_weight="0.6">
+
+                            <TextView
+                                android:id="@+id/txt_mob"
+
+                                style="@style/CommanStyleAN"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="right"
+                                android:textSize="@dimen/size15" />
+                        </LinearLayout>
                     </LinearLayout>
+
+                    <TextView
+
+                        android:id="@+id/txt_add_value"
+                        style="@style/CommanStyleAN"
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/size5"
+                        android:text="@string/txt_shipping_address"
+                        android:textSize="@dimen/size15"
+
+                        android:visibility="visible" />
+
+
                 </LinearLayout>
 
 
-
-                <TextView
-                    android:id="@+id/skCode"
-                    style="@style/CommanStyleAN"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/size5"
-                    android:text="@string/sk_code"
-
-                    android:textSize="@dimen/size15"
-                    />
-
-
-                <TextView
-
-                    android:id="@+id/txt_add_value"
-                    style="@style/CommanStyleAN"
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/size8"
-                    android:text="@string/txt_shipping_address"
-                    android:textSize="@dimen/size15"
-
-                    android:visibility="visible" />
-
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/llCall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/size10"
+                android:background="@color/purple_500"
+                android:gravity="center"
+                android:padding="@dimen/size10">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_baseline_call_24"
+                    android:gravity="center"
+                    android:text=" Call"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/size18" />
+            </LinearLayout>
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

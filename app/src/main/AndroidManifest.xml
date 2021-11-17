@@ -41,22 +41,28 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activity.ZoomImageActivity"
+            android:screenOrientation="portrait"
             android:exported="true" />
         <activity
             android:name=".activity.CustomerDetailActivity"
+            android:screenOrientation="portrait"
             android:exported="true" />
         <activity
             android:name=".activity.CapcherImageActivity"
+            android:screenOrientation="portrait"
             android:exported="true" />
         <activity
             android:name=".activity.MapViewActivity"
+            android:screenOrientation="portrait"
             android:exported="true" />
         <activity
             android:name=".activity.HomeActivity"
+            android:screenOrientation="portrait"
             android:exported="true"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
